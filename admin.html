@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Admin Panel — Sigupai Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --hijau:#1e4d2b;--hijau2:#2d6a4f;--hijau3:#40916c;
+  --emas:#c8963e;--emas2:#e9b84a;
+  --krem:#f5f0e8;--bg:#0f1a13;--surface:#162319;--card:#1c2d21;
+  --teks:#f0ede6;--abu:#8a9e8f;--border:rgba(255,255,255,.08);
+  --sidebar-w:240px;
+}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--teks);font-size:14px;min-height:100vh}
+a{text-decoration:none;color:inherit}
+
+/* ══════════════════════════
+   LOGIN GATE
+══════════════════════════ */
+.gate{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:1000;padding:20px}
+.gate.hide{display:none}
+.gate-card{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:44px 40px;max-width:380px;width:100%;box-shadow:0 32px 80px rgba(0,0,0,.6)}
+.gate-logo{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:28px}
+.gate-logo-icon{width:52px;height:52px;background:linear-gradient(135deg,var(--hijau),var(--hijau3));border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--emas2)}
+.gate-logo-text{font-size:22px;font-weight:800;color:var(--teks)}
+.gate-logo-sub{font-size:11px;font-weight:700;color:var(--abu);letter-spacing:.1em;text-transform:uppercase;text-align:center;display:block;margin-bottom:24px}
+.gate-title{font-size:18px;font-weight:800;margin-bottom:6px;text-align:center}
+.gate-sub{font-size:13px;color:var(--abu);text-align:center;margin-bottom:24px}
+.gate-field{position:relative;margin-bottom:14px}
+.gate-field i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--abu);font-size:13px}
+.gate-field input{width:100%;background:rgba(255,255,255,.06);border:1.5px solid var(--border);border-radius:10px;padding:13px 14px 13px 40px;font-size:14px;font-family:inherit;outline:none;color:var(--teks)}
+.gate-field input:focus{border-color:var(--hijau3)}
+.gate-field input::placeholder{color:var(--abu)}
+.gate-err{background:rgba(220,38,38,.15);border:1px solid rgba(220,38,38,.3);color:#f87171;font-size:12.5px;padding:9px 13px;border-radius:8px;margin-bottom:14px;display:none;align-items:center;gap:7px}
+.gate-btn{width:100%;background:linear-gradient(135deg,var(--hijau),var(--hijau3));color:#fff;border:none;padding:13px;border-radius:10px;font-size:14.5px;font-weight:800;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;transition:.2s}
+.gate-btn:hover{opacity:.9}
+.gate-btn:disabled{opacity:.6;cursor:not-allowed}
+
+/* ══════════════════════════
+   MAIN LAYOUT
+══════════════════════════ */
+.admin{display:none;min-height:100vh}
+.admin.show{display:flex}
+
+/* SIDEBAR */
+.sidebar{width:var(--sidebar-w);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;transition:.25s}
+.sidebar-logo{padding:22px 20px 18px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border)}
+.sidebar-logo-icon{width:38px;height:38px;background:linear-gradient(135deg,var(--hijau),var(--hijau3));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--emas2);flex-shrink:0}
+.sidebar-logo-text{font-size:16px;font-weight:800;color:var(--teks);line-height:1}
+.sidebar-logo-sub{font-size:10px;color:var(--abu);font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.sidebar-badge{margin-left:auto;background:rgba(200,150,62,.2);color:var(--emas);font-size:9.5px;font-weight:800;padding:3px 8px;border-radius:20px;letter-spacing:.05em}
+.sidebar-nav{flex:1;padding:14px 10px;overflow-y:auto;display:flex;flex-direction:column;gap:2px}
+.nav-section{font-size:10px;font-weight:800;color:var(--abu);letter-spacing:.08em;text-transform:uppercase;padding:12px 10px 6px;opacity:.6}
+.nav-item{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:10px;cursor:pointer;transition:.15s;color:var(--abu);border:none;background:none;font-family:inherit;font-size:13.5px;font-weight:600;width:100%;text-align:left}
+.nav-item:hover{background:rgba(255,255,255,.05);color:var(--teks)}
+.nav-item.active{background:rgba(30,77,43,.4);color:#a3d9a5;border:1px solid rgba(64,145,108,.25)}
+.nav-item i{width:18px;text-align:center;font-size:14px;flex-shrink:0}
+.nav-item .nav-badge{margin-left:auto;background:var(--emas);color:#fff;font-size:10px;font-weight:800;min-width:18px;height:18px;border-radius:20px;display:flex;align-items:center;justify-content:center;padding:0 4px}
+.sidebar-footer{padding:16px 10px;border-top:1px solid var(--border)}
+.btn-logout{width:100%;display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;cursor:pointer;color:#f87171;border:none;background:rgba(220,38,38,.08);font-family:inherit;font-size:13px;font-weight:700;transition:.15s}
+.btn-logout:hover{background:rgba(220,38,38,.15)}
+
+/* MAIN */
+.main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 28px;height:60px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:50}
+.topbar-title{font-size:16px;font-weight:800}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.topbar-time{font-size:12px;color:var(--abu)}
+.topbar-admin{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:9px;padding:6px 12px}
+.topbar-admin i{color:var(--emas2);font-size:14px}
+.topbar-admin span{font-size:12.5px;font-weight:700}
+.content{padding:28px;flex:1}
+
+/* PANELS */
+.panel{display:none}
+.panel.active{display:block}
+
+/* ══════════════════════════
+   STATS GRID
+══════════════════════════ */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px 22px;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;right:-20px;top:-20px;width:80px;height:80px;border-radius:50%;opacity:.06}
+.stat-card.green::before{background:#22c55e}
+.stat-card.gold::before{background:#f59e0b}
+.stat-card.blue::before{background:#3b82f6}
+.stat-card.red::before{background:#ef4444}
+.stat-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;margin-bottom:14px}
+.stat-card.green .stat-icon{background:rgba(34,197,94,.15);color:#4ade80}
+.stat-card.gold .stat-icon{background:rgba(245,158,11,.15);color:#fbbf24}
+.stat-card.blue .stat-icon{background:rgba(59,130,246,.15);color:#60a5fa}
+.stat-card.red .stat-icon{background:rgba(239,68,68,.15);color:#f87171}
+.stat-num{font-size:28px;font-weight:800;margin-bottom:3px;line-height:1}
+.stat-lbl{font-size:12px;color:var(--abu);font-weight:600}
+.stat-delta{font-size:11.5px;font-weight:700;margin-top:8px;display:flex;align-items:center;gap:4px}
+.stat-delta.up{color:#4ade80}
+.stat-delta.down{color:#f87171}
+
+/* ══════════════════════════
+   CHARTS ROW
+══════════════════════════ */
+.charts-row{display:grid;grid-template-columns:1fr 300px;gap:16px;margin-bottom:28px}
+.chart-box{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px}
+.chart-box-title{font-size:14px;font-weight:800;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between}
+.chart-box-title span{font-size:12px;color:var(--abu);font-weight:600}
+.bar-chart{display:flex;align-items:flex-end;gap:6px;height:140px}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px}
+.bar{border-radius:5px 5px 0 0;transition:.4s;cursor:pointer;position:relative;min-width:20px}
+.bar.green{background:linear-gradient(180deg,#4ade80,#22c55e)}
+.bar:hover{opacity:.85}
+.bar-lbl{font-size:10px;color:var(--abu);font-weight:600;white-space:nowrap}
+.donut-wrap{display:flex;flex-direction:column;align-items:center;gap:14px}
+.donut-chart{position:relative;width:130px;height:130px}
+.donut-chart svg{transform:rotate(-90deg)}
+.donut-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.donut-center strong{font-size:20px;font-weight:800;line-height:1}
+.donut-center span{font-size:11px;color:var(--abu)}
+.donut-legend{width:100%;display:flex;flex-direction:column;gap:7px}
+.legend-row{display:flex;align-items:center;gap:8px;font-size:12px}
+.legend-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+.legend-row span{flex:1;color:var(--abu)}
+.legend-row strong{font-size:12.5px}
+
+/* ══════════════════════════
+   TABLES / LISTS
+══════════════════════════ */
+.section-title{font-size:16px;font-weight:800;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.section-title-left{display:flex;align-items:center;gap:10px}
+.section-title-left i{color:var(--emas2)}
+.btn-primary{background:linear-gradient(135deg,var(--hijau),var(--hijau3));color:#fff;border:none;padding:9px 18px;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:7px;transition:.2s;white-space:nowrap}
+.btn-primary:hover{opacity:.9}
+.btn-secondary{background:rgba(255,255,255,.07);color:var(--teks);border:1px solid var(--border);padding:8px 16px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:7px;transition:.15s}
+.btn-secondary:hover{background:rgba(255,255,255,.1)}
+.btn-danger{background:rgba(220,38,38,.15);color:#f87171;border:1px solid rgba(220,38,38,.25);padding:7px 13px;border-radius:8px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:5px;transition:.15s}
+.btn-danger:hover{background:rgba(220,38,38,.25)}
+
+.filter-bar{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+.filter-chip{padding:7px 15px;border-radius:20px;font-size:12.5px;font-weight:700;border:1.5px solid var(--border);background:transparent;color:var(--abu);cursor:pointer;transition:.15s;white-space:nowrap}
+.filter-chip:hover,.filter-chip.active{background:var(--hijau);color:#fff;border-color:var(--hijau)}
+.search-input{flex:1;min-width:200px;background:rgba(255,255,255,.06);border:1.5px solid var(--border);border-radius:9px;padding:8px 14px 8px 36px;font-size:13px;font-family:inherit;outline:none;color:var(--teks);position:relative}
+.search-wrap{position:relative;flex:1;min-width:200px}
+.search-wrap i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--abu);font-size:12px;pointer-events:none}
+.search-wrap input{width:100%;background:rgba(255,255,255,.06);border:1.5px solid var(--border);border-radius:9px;padding:8px 14px 8px 34px;font-size:13px;font-family:inherit;outline:none;color:var(--teks)}
+.search-wrap input:focus{border-color:var(--hijau3)}
+.search-wrap input::placeholder{color:var(--abu)}
+
+.data-table{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.dt-head{display:grid;padding:12px 20px;background:rgba(255,255,255,.03);border-bottom:1px solid var(--border);font-size:11px;font-weight:800;color:var(--abu);text-transform:uppercase;letter-spacing:.05em}
+.dt-row{border-bottom:1px solid rgba(255,255,255,.04);transition:.12s;cursor:default}
+.dt-row:last-child{border-bottom:none}
+.dt-row:hover{background:rgba(255,255,255,.03)}
+.dt-row-inner{display:grid;padding:14px 20px;align-items:center;gap:14px}
+.dt-thumb{width:46px;height:46px;border-radius:10px;overflow:hidden;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;color:var(--abu);font-size:20px;flex-shrink:0}
+.dt-thumb img{width:100%;height:100%;object-fit:cover}
+.dt-name{font-size:13.5px;font-weight:700;margin-bottom:2px}
+.dt-sub{font-size:12px;color:var(--abu)}
+.dt-price{font-size:14px;font-weight:800;color:#4ade80}
+.chip{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;white-space:nowrap}
+.chip-menunggu{background:rgba(245,158,11,.15);color:#fbbf24}
+.chip-proses{background:rgba(59,130,246,.15);color:#60a5fa}
+.chip-kirim{background:rgba(34,197,94,.15);color:#4ade80}
+.chip-selesai{background:rgba(34,197,94,.2);color:#22c55e}
+.chip-batal{background:rgba(239,68,68,.15);color:#f87171}
+.chip-kat{background:rgba(64,145,108,.2);color:#a3d9a5;font-size:11px;padding:3px 9px;border-radius:20px}
+.dt-actions{display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap}
+.btn-edit{background:rgba(59,130,246,.15);color:#60a5fa;border:none;padding:6px 12px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:4px;transition:.15s}
+.btn-edit:hover{background:rgba(59,130,246,.25)}
+
+/* Status select */
+.status-select{background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:7px;color:var(--teks);font-size:12px;font-family:inherit;padding:5px 8px;cursor:pointer;outline:none}
+.status-select:focus{border-color:var(--hijau3)}
+
+/* ══════════════════════════
+   MODAL PRODUK
+══════════════════════════ */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:500;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+.modal-overlay.show{display:flex}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:32px;max-width:560px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 32px 80px rgba(0,0,0,.5)}
+.modal-title{font-size:18px;font-weight:800;margin-bottom:4px}
+.modal-sub{font-size:13px;color:var(--abu);margin-bottom:24px}
+.m-field{margin-bottom:16px}
+.m-field label{font-size:12.5px;font-weight:700;display:block;margin-bottom:6px;color:rgba(255,255,255,.75)}
+.m-field input,.m-field select,.m-field textarea{width:100%;background:rgba(255,255,255,.06);border:1.5px solid var(--border);border-radius:9px;padding:11px 14px;font-size:14px;font-family:inherit;outline:none;color:var(--teks);transition:.15s}
+.m-field input:focus,.m-field select:focus,.m-field textarea:focus{border-color:var(--hijau3)}
+.m-field input::placeholder,.m-field textarea::placeholder{color:var(--abu)}
+.m-field select option{background:#1c2d21;color:var(--teks)}
+.m-field textarea{resize:vertical;min-height:80px}
+.m-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.modal-foot{display:flex;gap:10px;margin-top:8px}
+.modal-foot .btn-primary{flex:1;justify-content:center;padding:12px}
+.modal-foot .btn-secondary{padding:12px 20px}
+
+/* Upload foto modal */
+.foto-upload-area{border:2px dashed rgba(255,255,255,.12);border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:.15s;position:relative}
+.foto-upload-area:hover{border-color:var(--hijau3);background:rgba(64,145,108,.05)}
+.foto-upload-area i{font-size:28px;color:var(--abu);margin-bottom:8px;display:block}
+.foto-upload-area span{font-size:12.5px;color:var(--abu)}
+.foto-upload-area input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}
+.foto-preview{width:100%;max-height:160px;object-fit:cover;border-radius:10px;display:none;margin-bottom:10px}
+.foto-url-or{display:flex;align-items:center;gap:10px;margin:12px 0;color:var(--abu);font-size:12px}
+.foto-url-or::before,.foto-url-or::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ══════════════════════════
+   PESANAN detail sheet
+══════════════════════════ */
+.pesanan-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.pd-item{background:rgba(255,255,255,.04);border-radius:8px;padding:10px 13px}
+.pd-item label{font-size:10.5px;font-weight:800;color:var(--abu);text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:3px}
+.pd-item span{font-size:13px;font-weight:600}
+.pesanan-items-list{background:rgba(255,255,255,.04);border-radius:8px;padding:13px;font-size:13px;color:rgba(255,255,255,.8);line-height:1.8;margin-bottom:14px}
+
+/* ══════════════════════════
+   TOAST
+══════════════════════════ */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--hijau3);color:#fff;padding:14px 20px;border-radius:12px;font-size:13.5px;font-weight:700;box-shadow:0 8px 32px rgba(0,0,0,.4);transform:translateY(80px);opacity:0;transition:.3s;z-index:9999;display:flex;align-items:center;gap:8px;max-width:360px}
+.toast.show{transform:translateY(0);opacity:1}
+
+/* EMPTY */
+.empty-state{padding:60px 20px;text-align:center;color:var(--abu)}
+.empty-state i{font-size:48px;margin-bottom:14px;display:block;opacity:.3}
+.empty-state h3{font-size:15px;font-weight:700;margin-bottom:6px;color:var(--teks)}
+.empty-state p{font-size:13px}
+
+/* LOADING */
+.loading{padding:50px;text-align:center;color:var(--abu)}
+.loading i{font-size:28px;margin-bottom:10px;display:block}
+
+/* SCROLL */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:3px}
+
+@media(max-width:900px){
+  .sidebar{width:60px;overflow:hidden}
+  .sidebar .sidebar-logo-text,.sidebar .sidebar-logo-sub,.sidebar .sidebar-badge,.sidebar .nav-item span,.sidebar .nav-item .nav-badge,.sidebar .nav-section{display:none}
+  .main{margin-left:60px}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .charts-row{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .content{padding:16px}
+  .modal{padding:22px}
+}
+</style>
+</head>
+<body>
+
+<!-- GATE -->
+<div class="gate" id="gate">
+  <div class="gate-card">
+    <div class="gate-logo">
+      <div class="gate-logo-icon"><i class="fas fa-seedling"></i></div>
+      <div class="gate-logo-text">Sigupai</div>
+    </div>
+    <span class="gate-logo-sub">Admin Panel</span>
+    <div class="gate-title">Selamat datang</div>
+    <div class="gate-sub">Masukkan kode akses untuk melanjutkan</div>
+    <div class="gate-err" id="gateErr"><i class="fas fa-exclamation-circle"></i><span id="gateErrText"></span></div>
+    <div class="gate-field">
+      <i class="fas fa-lock"></i>
+      <input type="password" id="gatePass" placeholder="Kode akses admin" onkeypress="if(event.key==='Enter')masukAdmin()"/>
+    </div>
+    <button class="gate-btn" id="gateBtn" onclick="masukAdmin()"><i class="fas fa-sign-in-alt"></i> Masuk ke Panel</button>
+  </div>
+</div>
+
+<!-- ADMIN LAYOUT -->
+<div class="admin" id="admin">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-icon"><i class="fas fa-seedling"></i></div>
+      <div>
+        <div class="sidebar-logo-text">Sigupai</div>
+        <div class="sidebar-logo-sub">Admin Panel</div>
+      </div>
+      <div class="sidebar-badge">OWNER</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section">Utama</div>
+      <button class="nav-item active" onclick="pindahPanel('dashboard',this)"><i class="fas fa-chart-pie"></i><span>Dashboard</span></button>
+      <button class="nav-item" onclick="pindahPanel('pesanan',this)"><i class="fas fa-receipt"></i><span>Pesanan Masuk</span><span class="nav-badge" id="badgePesanan">0</span></button>
+
+      <div class="nav-section">Katalog</div>
+      <button class="nav-item" onclick="pindahPanel('produk',this)"><i class="fas fa-box-open"></i><span>Kelola Produk</span></button>
+      <button class="nav-item" onclick="pindahPanel('tambahproduk',this)"><i class="fas fa-plus-circle"></i><span>Tambah Produk</span></button>
+
+      <div class="nav-section">Pengguna</div>
+      <button class="nav-item" onclick="pindahPanel('pengguna',this)"><i class="fas fa-users"></i><span>Data Pelanggan</span></button>
+
+      <div class="nav-section">Konten</div>
+      <button class="nav-item" onclick="pindahPanel('artikel',this)"><i class="fas fa-newspaper"></i><span>Artikel Edukasi</span></button>
+
+      <div class="nav-section">Lainnya</div>
+      <button class="nav-item" onclick="window.open('index.html','_blank')"><i class="fas fa-external-link-alt"></i><span>Lihat Toko</span></button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="btn-logout" onclick="logoutAdmin()"><i class="fas fa-sign-out-alt"></i><span>Keluar</span></button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="topbarTitle">Dashboard</div>
+      <div class="topbar-right">
+        <div class="topbar-time" id="topbarTime"></div>
+        <div class="topbar-admin"><i class="fas fa-shield-alt"></i><span>Admin</span></div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ═══ PANEL: DASHBOARD ═══ -->
+      <div class="panel active" id="panelDashboard">
+        <div class="stats-grid">
+          <div class="stat-card green">
+            <div class="stat-icon"><i class="fas fa-money-bill-wave"></i></div>
+            <div class="stat-num" id="statOmset">—</div>
+            <div class="stat-lbl">Total Omset</div>
+            <div class="stat-delta up"><i class="fas fa-arrow-up"></i> Live dari Supabase</div>
+          </div>
+          <div class="stat-card gold">
+            <div class="stat-icon"><i class="fas fa-receipt"></i></div>
+            <div class="stat-num" id="statPesanan">—</div>
+            <div class="stat-lbl">Total Pesanan</div>
+            <div class="stat-delta up" id="statPesananPending"><i class="fas fa-clock"></i> <span>— menunggu</span></div>
+          </div>
+          <div class="stat-card blue">
+            <div class="stat-icon"><i class="fas fa-box-open"></i></div>
+            <div class="stat-num" id="statProduk">—</div>
+            <div class="stat-lbl">Total Produk</div>
+            <div class="stat-delta up"><i class="fas fa-store"></i> Aktif di katalog</div>
+          </div>
+          <div class="stat-card red">
+            <div class="stat-icon"><i class="fas fa-users"></i></div>
+            <div class="stat-num" id="statUser">—</div>
+            <div class="stat-lbl">Total Pelanggan</div>
+            <div class="stat-delta up"><i class="fas fa-user-plus"></i> Terdaftar</div>
+          </div>
+        </div>
+
+        <div class="charts-row">
+          <div class="chart-box">
+            <div class="chart-box-title">Pesanan per Bulan <span id="chartTahun">2025</span></div>
+            <div class="bar-chart" id="barChart">
+              <div style="color:var(--abu);font-size:13px;margin:auto">Memuat data...</div>
+            </div>
+          </div>
+          <div class="chart-box">
+            <div class="chart-box-title">Status Pesanan</div>
+            <div class="donut-wrap">
+              <div class="donut-chart">
+                <svg width="130" height="130" viewBox="0 0 130 130">
+                  <circle cx="65" cy="65" r="50" fill="none" stroke="rgba(255,255,255,.05)" stroke-width="20"/>
+                  <circle id="donutMenunggu" cx="65" cy="65" r="50" fill="none" stroke="#fbbf24" stroke-width="20" stroke-dasharray="0 314" stroke-linecap="round"/>
+                  <circle id="donutProses" cx="65" cy="65" r="50" fill="none" stroke="#60a5fa" stroke-width="20" stroke-dasharray="0 314" stroke-linecap="round"/>
+                  <circle id="donutKirim" cx="65" cy="65" r="50" fill="none" stroke="#4ade80" stroke-width="20" stroke-dasharray="0 314" stroke-linecap="round"/>
+                  <circle id="donutSelesai" cx="65" cy="65" r="50" fill="none" stroke="#22c55e" stroke-width="20" stroke-dasharray="0 314" stroke-linecap="round"/>
+                </svg>
+                <div class="donut-center"><strong id="donutTotal">0</strong><span>pesanan</span></div>
+              </div>
+              <div class="donut-legend">
+                <div class="legend-row"><div class="legend-dot" style="background:#fbbf24"></div><span>Menunggu Bayar</span><strong id="lgMenunggu">0</strong></div>
+                <div class="legend-row"><div class="legend-dot" style="background:#60a5fa"></div><span>Diproses</span><strong id="lgProses">0</strong></div>
+                <div class="legend-row"><div class="legend-dot" style="background:#4ade80"></div><span>Dikirim</span><strong id="lgKirim">0</strong></div>
+                <div class="legend-row"><div class="legend-dot" style="background:#22c55e"></div><span>Selesai</span><strong id="lgSelesai">0</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pesanan terbaru -->
+        <div class="section-title">
+          <div class="section-title-left"><i class="fas fa-clock"></i> Pesanan Terbaru</div>
+          <button class="btn-secondary" onclick="pindahPanel('pesanan',null)"><i class="fas fa-list"></i> Lihat Semua</button>
+        </div>
+        <div id="dashPesananList"><div class="loading"><i class="fas fa-spinner fa-spin"></i>Memuat...</div></div>
+      </div>
+
+      <!-- ═══ PANEL: PESANAN ═══ -->
+      <div class="panel" id="panelPesanan">
+        <div class="section-title">
+          <div class="section-title-left"><i class="fas fa-receipt"></i> Semua Pesanan</div>
+        </div>
+        <div class="filter-bar">
+          <button class="filter-chip active" onclick="filterPesanan(this,'')">Semua</button>
+          <button class="filter-chip" onclick="filterPesanan(this,'Menunggu')">Menunggu Bayar</button>
+          <button class="filter-chip" onclick="filterPesanan(this,'Diproses')">Diproses</button>
+          <button class="filter-chip" onclick="filterPesanan(this,'Dikirim')">Dikirim</button>
+          <button class="filter-chip" onclick="filterPesanan(this,'Selesai')">Selesai</button>
+          <div class="search-wrap"><i class="fas fa-search"></i><input type="text" id="cariPesanan" placeholder="Cari nama / order ID..." oninput="renderPesanan()"/></div>
+        </div>
+        <div id="pesananList"><div class="loading"><i class="fas fa-spinner fa-spin"></i>Memuat...</div></div>
+      </div>
+
+      <!-- ═══ PANEL: PRODUK ═══ -->
+      <div class="panel" id="panelProduk">
+        <div class="section-title">
+          <div class="section-title-left"><i class="fas fa-box-open"></i> Kelola Produk</div>
+          <button class="btn-primary" onclick="pindahPanel('tambahproduk',null)"><i class="fas fa-plus"></i> Tambah Produk</button>
+        </div>
+        <div class="filter-bar">
+          <button class="filter-chip active" onclick="filterProduk(this,'')">Semua</button>
+          <button class="filter-chip" onclick="filterProduk(this,'Beras Putih')">Beras Putih</button>
+          <button class="filter-chip" onclick="filterProduk(this,'Beras Merah')">Beras Merah</button>
+          <button class="filter-chip" onclick="filterProduk(this,'Bibit')">Bibit</button>
+          <button class="filter-chip" onclick="filterProduk(this,'Grosir')">Grosir</button>
+          <div class="search-wrap"><i class="fas fa-search"></i><input type="text" id="cariProdukAdmin" placeholder="Cari produk..." oninput="renderProduk()"/></div>
+        </div>
+        <div id="produkList"><div class="loading"><i class="fas fa-spinner fa-spin"></i>Memuat...</div></div>
+      </div>
+
+      <!-- ═══ PANEL: TAMBAH PRODUK ═══ -->
+      <div class="panel" id="panelTambahproduk">
+        <div class="section-title">
+          <div class="section-title-left"><i class="fas fa-plus-circle"></i> <span id="judulTambah">Tambah Produk Baru</span></div>
+        </div>
+
+        <div style="max-width:640px">
+          <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px">
+            <div id="msgTambah" style="display:none;padding:10px 14px;border-radius:8px;margin-bottom:16px;font-size:13px;font-weight:600;display:none;align-items:center;gap:8px"></div>
+
+            <!-- FOTO -->
+            <div class="m-field">
+              <label>Foto Produk</label>
+              <img id="tpFotoPreview" class="foto-preview" src="" alt="preview"/>
+              <div class="foto-upload-area" id="fotoArea" onclick="document.getElementById('tpFotoFile').click()">
+                <input type="file" id="tpFotoFile" accept="image/*" style="display:none" onchange="prevFoto(this)"/>
+                <i class="fas fa-cloud-upload-alt"></i>
+                <span>Klik untuk upload foto produk (JPG/PNG/WEBP, maks 5MB)</span>
+              </div>
+              <div class="foto-url-or">atau masukkan URL foto</div>
+              <input type="url" id="tpFotoUrl" placeholder="https://..." style="width:100%;background:rgba(255,255,255,.06);border:1.5px solid var(--border);border-radius:9px;padding:10px 14px;font-size:13px;font-family:inherit;outline:none;color:var(--teks)" oninput="prevFotoUrl(this.value)"/>
+            </div>
+
+            <div class="m-field">
+              <label>Nama Produk <span style="color:#f87171">*</span></label>
+              <input type="text" id="tpNama" placeholder="Contoh: Beras Sigupai Premium 5kg"/>
+            </div>
+
+            <div class="m-row">
+              <div class="m-field">
+                <label>Kategori <span style="color:#f87171">*</span></label>
+                <select id="tpKategori">
+                  <option value="Beras Putih">Beras Putih</option>
+                  <option value="Beras Merah">Beras Merah</option>
+                  <option value="Bibit">Bibit / Benih</option>
+                  <option value="Grosir">Grosir</option>
+                </select>
+              </div>
+              <div class="m-field">
+                <label>Berat / Satuan <span style="color:#f87171">*</span></label>
+                <input type="text" id="tpBerat" placeholder="5kg / 10kg / 25kg"/>
+              </div>
+            </div>
+
+            <div class="m-row">
+              <div class="m-field">
+                <label>Harga (Rp) <span style="color:#f87171">*</span></label>
+                <input type="number" id="tpHarga" placeholder="85000"/>
+              </div>
+              <div class="m-field">
+                <label>Stok Tersedia <span style="color:#f87171">*</span></label>
+                <input type="number" id="tpStok" placeholder="50"/>
+              </div>
+            </div>
+
+            <div class="m-field">
+              <label>Deskripsi Produk</label>
+              <textarea id="tpDeskripsi" placeholder="Ceritakan keunggulan produk: asal, cara tanam, kualitas, dll..." style="min-height:100px"></textarea>
+            </div>
+
+            <div class="m-row">
+              <div class="m-field">
+                <label>Harga Coret / Harga Asli (opsional)</label>
+                <input type="number" id="tpHargaAsli" placeholder="100000 (biar tampil diskon)"/>
+              </div>
+              <div class="m-field">
+                <label>Label Badge</label>
+                <select id="tpBadge">
+                  <option value="">Pilih badge...</option>
+                  <option value="Terlaris">🔴 Terlaris</option>
+                  <option value="Baru">🟢 Baru</option>
+                  <option value="Premium">🟡 Premium</option>
+                  <option value="Bibit Unggul">🟣 Bibit Unggul</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:10px;margin-top:8px">
+              <button class="btn-primary" style="flex:1;justify-content:center;padding:13px" onclick="simpanProdukBaru()" id="btnSimpan"><i class="fas fa-save"></i> Simpan Produk</button>
+              <button class="btn-secondary" onclick="resetFormProduk()" style="padding:13px 20px"><i class="fas fa-redo"></i> Reset</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ PANEL: PENGGUNA ═══ -->
+      <div class="panel" id="panelPengguna">
+        <div class="section-title">
+          <div class="section-title-left"><i class="fas fa-users"></i> Data Pelanggan</div>
+        </div>
+        <div class="filter-bar">
+          <div class="search-wrap"><i class="fas fa-search"></i><input type="text" id="cariUser" placeholder="Cari nama atau email..." oninput="renderUser()"/></div>
+        </div>
+        <div id="userList"><div class="loading"><i class="fas fa-spinner fa-spin"></i>Memuat...</div></div>
+      </div>
+
+      <!-- ═══ PANEL: ARTIKEL ═══ -->
+      <div class="panel" id="panelArtikel">
+        <div class="section-title">
+          <div class="section-title-left"><i class="fas fa-newspaper"></i> Artikel Edukasi</div>
+          <button class="btn-primary" onclick="bukaFormArtikel()"><i class="fas fa-plus"></i> Tambah Artikel</button>
+        </div>
+
+        <!-- FORM ARTIKEL -->
+        <div id="formArtikelWrap" style="display:none;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px">
+          <div style="font-size:15px;font-weight:800;margin-bottom:18px;color:var(--teks)" id="formArtikelTitle">Tambah Artikel Baru</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+            <div>
+              <label style="font-size:12px;font-weight:700;display:block;margin-bottom:5px;color:var(--abu)">JUDUL ARTIKEL *</label>
+              <input id="artJudul" type="text" placeholder="Judul artikel..." style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:10px 13px;font-size:14px;font-family:inherit;outline:none;color:var(--teks)"/>
+            </div>
+            <div>
+              <label style="font-size:12px;font-weight:700;display:block;margin-bottom:5px;color:var(--abu)">KATEGORI *</label>
+              <select id="artKategori" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:10px 13px;font-size:14px;font-family:inherit;outline:none;color:var(--teks)">
+                <option value="Tips Memasak">Tips Memasak</option>
+                <option value="Varietas">Varietas Padi</option>
+                <option value="Resep">Resep</option>
+                <option value="Cerita Petani">Cerita Petani</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+            <div>
+              <label style="font-size:12px;font-weight:700;display:block;margin-bottom:5px;color:var(--abu)">ESTIMASI BACA</label>
+              <input id="artEstimasi" type="text" placeholder="5 menit baca" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:10px 13px;font-size:14px;font-family:inherit;outline:none;color:var(--teks)"/>
+            </div>
+            <div>
+              <label style="font-size:12px;font-weight:700;display:block;margin-bottom:5px;color:var(--abu)">URL GAMBAR (opsional)</label>
+              <input id="artGambar" type="text" placeholder="https://..." style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:10px 13px;font-size:14px;font-family:inherit;outline:none;color:var(--teks)"/>
+            </div>
+          </div>
+          <div style="margin-bottom:16px">
+            <label style="font-size:12px;font-weight:700;display:block;margin-bottom:5px;color:var(--abu)">ISI ARTIKEL *</label>
+            <textarea id="artIsi" rows="8" placeholder="Tulis isi artikel di sini. Tekan Enter untuk paragraf baru..." style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:10px 13px;font-size:14px;font-family:inherit;outline:none;resize:vertical;line-height:1.7;color:var(--teks)"></textarea>
+          </div>
+          <div style="display:flex;gap:10px">
+            <button onclick="simpanArtikel()" class="btn-primary" style="display:flex;align-items:center;gap:7px"><i class="fas fa-save"></i> Simpan Artikel</button>
+            <button onclick="tutupFormArtikel()" style="background:none;border:1px solid var(--border);padding:10px 18px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;color:var(--abu)">Batal</button>
+          </div>
+        </div>
+
+        <div id="artikelList"><div class="loading"><i class="fas fa-spinner fa-spin"></i>Memuat artikel...</div></div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /admin -->
+
+<!-- MODAL: Detail Pesanan -->
+<div class="modal-overlay" id="modalPesanan">
+  <div class="modal" style="max-width:520px">
+    <div class="modal-title">Detail Pesanan</div>
+    <div class="modal-sub" id="modalPesananId">—</div>
+    <div id="modalPesananBody"></div>
+    <div style="display:flex;gap:10px;margin-top:16px">
+      <select id="modalStatusSelect" class="status-select" style="flex:1;padding:10px 12px;font-size:13.5px">
+        <option value="Menunggu Pembayaran">Menunggu Pembayaran</option>
+        <option value="Diproses">Diproses</option>
+        <option value="Dikirim">Dikirim</option>
+        <option value="Selesai">Selesai</option>
+        <option value="Dibatalkan">Dibatalkan</option>
+      </select>
+      <button class="btn-primary" onclick="updateStatusPesanan()"><i class="fas fa-check"></i> Update Status</button>
+      <button class="btn-secondary" onclick="document.getElementById('modalPesanan').classList.remove('show')"><i class="fas fa-times"></i></button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Edit Produk -->
+<div class="modal-overlay" id="modalEditProduk">
+  <div class="modal">
+    <div class="modal-title">Edit Produk</div>
+    <div class="modal-sub">Ubah informasi produk yang sudah ada</div>
+    <input type="hidden" id="epId"/>
+
+    <div class="m-field">
+      <label>Foto — URL gambar</label>
+      <input type="text" id="epFotoUrl" placeholder="https://..." oninput="document.getElementById('epFotoPreview').src=this.value"/>
+      <img id="epFotoPreview" src="" style="width:100%;max-height:120px;object-fit:cover;border-radius:8px;margin-top:8px;display:block"/>
+    </div>
+
+    <div class="m-field"><label>Nama Produk</label><input type="text" id="epNama"/></div>
+    <div class="m-row">
+      <div class="m-field"><label>Kategori</label>
+        <select id="epKategori">
+          <option value="Beras Putih">Beras Putih</option>
+          <option value="Beras Merah">Beras Merah</option>
+          <option value="Bibit">Bibit / Benih</option>
+          <option value="Grosir">Grosir</option>
+        </select>
+      </div>
+      <div class="m-field"><label>Berat / Satuan</label><input type="text" id="epBerat"/></div>
+    </div>
+    <div class="m-row">
+      <div class="m-field"><label>Harga (Rp)</label><input type="number" id="epHarga"/></div>
+      <div class="m-field"><label>Stok</label><input type="number" id="epStok"/></div>
+    </div>
+    <div class="m-field"><label>Deskripsi</label><textarea id="epDeskripsi"></textarea></div>
+    <div class="m-row">
+      <div class="m-field"><label>Harga Asli (coret)</label><input type="number" id="epHargaAsli"/></div>
+      <div class="m-field"><label>Badge</label>
+        <select id="epBadge">
+          <option value="">Tanpa badge</option>
+          <option value="Terlaris">Terlaris</option>
+          <option value="Baru">Baru</option>
+          <option value="Premium">Premium</option>
+          <option value="Bibit Unggul">Bibit Unggul</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-secondary" onclick="document.getElementById('modalEditProduk').classList.remove('show')">Batal</button>
+      <button class="btn-primary" onclick="simpanEditProduk()"><i class="fas fa-save"></i> Simpan Perubahan</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SUPA_URL='https://vpyvmqovjgyfcawixpbi.supabase.co';
+const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZweXZtcW92amd5ZmNhd2l4cGJpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI2NTg5MjYsImV4cCI6MjA5ODIzNDkyNn0.TpjR5sG072VgdGiiu9RNjwAAwhy37cjFqXalGjwxoBw';
+const H={'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json'};
+const KODE='sigupai2026';
+
+/* ─── AUTH ─── */
+function masukAdmin(){
+  const pass=document.getElementById('gatePass').value.trim();
+  const btn=document.getElementById('gateBtn');
+  const err=document.getElementById('gateErr');
+  if(!pass){showErr('Masukkan kode akses');return;}
+  btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Memeriksa...';
+  setTimeout(()=>{
+    if(pass===KODE){
+      sessionStorage.setItem('admin_sgp','1');
+      document.getElementById('gate').classList.add('hide');
+      document.getElementById('admin').classList.add('show');
+      initAdmin();
+    } else {
+      showErr('Kode akses salah');
+      btn.disabled=false;btn.innerHTML='<i class="fas fa-sign-in-alt"></i> Masuk ke Panel';
+    }
+  },400);
+}
+function showErr(msg){
+  const e=document.getElementById('gateErr');
+  document.getElementById('gateErrText').textContent=msg;
+  e.style.display='flex';
+}
+function logoutAdmin(){
+  sessionStorage.removeItem('admin_sgp');
+  location.reload();
+}
+
+/* ─── TOAST ─── */
+function toast(msg,err=false){
+  const t=document.getElementById('toast');
+  t.style.background=err?'#dc2626':'var(--hijau3)';
+  t.innerHTML=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+/* ─── FORMAT ─── */
+function fRp(n){return 'Rp '+Number(n||0).toLocaleString('id-ID')}
+function fTgl(s){if(!s)return '-';return new Date(s).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})}
+function chipStatus(s){
+  s=(s||'').toLowerCase();
+  if(s.includes('menunggu'))return '<span class="chip chip-menunggu">Menunggu Bayar</span>';
+  if(s.includes('proses'))return '<span class="chip chip-proses">Diproses</span>';
+  if(s.includes('kirim'))return '<span class="chip chip-kirim">Dikirim</span>';
+  if(s.includes('selesai'))return '<span class="chip chip-selesai">Selesai</span>';
+  if(s.includes('batal'))return '<span class="chip chip-batal">Dibatalkan</span>';
+  return '<span class="chip chip-menunggu">'+s+'</span>';
+}
+
+/* ─── CLOCK ─── */
+function tickClock(){
+  const now=new Date();
+  document.getElementById('topbarTime').textContent=now.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'})+' · '+now.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}
+setInterval(tickClock,1000);tickClock();
+
+/* ─── NAVIGATION ─── */
+function pindahPanel(id,navEl){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel'+id.charAt(0).toUpperCase()+id.slice(1)).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  if(navEl)navEl.classList.add('active');
+  const titles={dashboard:'Dashboard',pesanan:'Pesanan Masuk',produk:'Kelola Produk',tambahproduk:'Tambah Produk',pengguna:'Data Pelanggan',artikel:'Artikel Edukasi'};
+  document.getElementById('topbarTitle').textContent=titles[id]||id;
+
+  if(id==='pesanan'&&!window._pesananLoaded){muatPesanan();}
+  if(id==='produk'&&!window._produkLoaded){muatProduk();}
+  if(id==='pengguna'&&!window._userLoaded){muatUser();}
+  if(id==='artikel'&&!window._artikelLoaded){muatArtikel();}
+  if(id==='tambahproduk'){
+    document.getElementById('judulTambah').textContent='Tambah Produk Baru';
+    document.getElementById('btnSimpan').dataset.editId='';
+    resetFormProduk();
+  }
+}
+
+/* ═══════════════════════════════════════
+   DATA LOADING
+═══════════════════════════════════════ */
+let allPesanan=[], allProduk=[], allUser=[];
+let filterPesananAktif='', filterProdukAktif='';
+let pesananDetailId=null;
+
+async function initAdmin(){
+  await Promise.all([muatDashboard()]);
+}
+
+async function muatDashboard(){
+  try{
+    const [rPesanan,rProduk,rUser]=await Promise.all([
+      fetch(`${SUPA_URL}/rest/v1/pesanan?select=*&order=created_at.desc`,{headers:H}),
+      fetch(`${SUPA_URL}/rest/v1/produk?select=*&order=created_at.desc`,{headers:H}),
+      fetch(`${SUPA_URL}/rest/v1/pengguna?select=*`,{headers:H})
+    ]);
+    allPesanan=await rPesanan.json();
+    allProduk=await rProduk.json();
+    allUser=await rUser.json();
+    window._pesananLoaded=true;window._produkLoaded=true;window._userLoaded=true;
+
+    // Stats
+    const omset=allPesanan.filter(p=>!(p.status||'').toLowerCase().includes('batal')).reduce((a,b)=>a+Number(b.total||0),0);
+    document.getElementById('statOmset').textContent=fRp(omset);
+    document.getElementById('statPesanan').textContent=allPesanan.length;
+    const pending=allPesanan.filter(p=>(p.status||'').toLowerCase().includes('menunggu')).length;
+    document.getElementById('statPesananPending').innerHTML=`<i class="fas fa-clock"></i> <span>${pending} menunggu bayar</span>`;
+    document.getElementById('statProduk').textContent=allProduk.length;
+    document.getElementById('statUser').textContent=allUser.length;
+    document.getElementById('badgePesanan').textContent=pending;
+
+    // Chart bar
+    renderBarChart();
+    // Donut
+    renderDonut();
+    // Recent orders
+    renderDashPesanan();
+  }catch(e){
+    console.error(e);
+    toast('Gagal memuat data. Periksa koneksi.',true);
+  }
+}
+
+function renderBarChart(){
+  const bulan=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+  const counts=Array(12).fill(0);
+  allPesanan.forEach(p=>{
+    if(p.created_at){
+      const m=new Date(p.created_at).getMonth();
+      counts[m]++;
+    }
+  });
+  const max=Math.max(...counts,1);
+  document.getElementById('chartTahun').textContent=new Date().getFullYear();
+  document.getElementById('barChart').innerHTML=counts.map((c,i)=>`
+    <div class="bar-col">
+      <div class="bar green" title="${c} pesanan" style="height:${Math.max(8,Math.round((c/max)*120))}px;width:100%"></div>
+      <div class="bar-lbl">${bulan[i]}</div>
+    </div>`).join('');
+}
+
+function renderDonut(){
+  const menunggu=allPesanan.filter(p=>(p.status||'').toLowerCase().includes('menunggu')).length;
+  const proses=allPesanan.filter(p=>(p.status||'').toLowerCase().includes('proses')).length;
+  const kirim=allPesanan.filter(p=>(p.status||'').toLowerCase().includes('kirim')&&!p.status.toLowerCase().includes('selesai')).length;
+  const selesai=allPesanan.filter(p=>(p.status||'').toLowerCase().includes('selesai')).length;
+  const total=allPesanan.length||1;
+  const CIRC=314;
+  let offset=0;
+  function dash(n){const pct=n/total*CIRC;const d=`${pct} ${CIRC-pct}`;return {d,o:offset+=pct};}
+  const dm=dash(menunggu);const dp=dash(proses);const dk=dash(kirim);const ds=dash(selesai);
+  document.getElementById('donutMenunggu').setAttribute('stroke-dasharray',dm.d);
+  document.getElementById('donutMenunggu').setAttribute('stroke-dashoffset','0');
+  let prev=0;
+  [[dm,'donutMenunggu'],[dp,'donutProses'],[dk,'donutKirim'],[ds,'donutSelesai']].forEach(([info,id])=>{
+    const el=document.getElementById(id);
+    el.setAttribute('stroke-dashoffset',(-prev).toString());
+    const pct=info.d.split(' ')[0];
+    prev+=parseFloat(pct);
+  });
+  document.getElementById('donutTotal').textContent=allPesanan.length;
+  document.getElementById('lgMenunggu').textContent=menunggu;
+  document.getElementById('lgProses').textContent=proses;
+  document.getElementById('lgKirim').textContent=kirim;
+  document.getElementById('lgSelesai').textContent=selesai;
+}
+
+function renderDashPesanan(){
+  const recent=allPesanan.slice(0,6);
+  if(!recent.length){
+    document.getElementById('dashPesananList').innerHTML='<div class="empty-state"><i class="fas fa-receipt"></i><h3>Belum ada pesanan</h3><p>Pesanan akan muncul di sini.</p></div>';return;
+  }
+  document.getElementById('dashPesananList').innerHTML=`
+    <div class="data-table">
+      <div class="dt-head" style="grid-template-columns:1fr 130px 110px 100px 70px"><span>Pesanan</span><span>Pembeli</span><span>Total</span><span>Status</span><span></span></div>
+      ${recent.map(p=>`
+      <div class="dt-row">
+        <div class="dt-row-inner" style="grid-template-columns:1fr 130px 110px 100px 70px">
+          <div><div class="dt-name">#${p.order_id}</div><div class="dt-sub">${fTgl(p.created_at)} · ${p.kurir||'-'}</div></div>
+          <div class="dt-sub">${p.nama_penerima||'-'}</div>
+          <div class="dt-price">${fRp(p.total)}</div>
+          <div>${chipStatus(p.status)}</div>
+          <div><button class="btn-edit" onclick="bukaDetailPesanan('${p.order_id}')"><i class="fas fa-eye"></i></button></div>
+        </div>
+      </div>`).join('')}
+    </div>`;
+}
+
+/* ═══ PESANAN ═══ */
+async function muatPesanan(){
+  if(!window._pesananLoaded){
+    try{
+      const r=await fetch(`${SUPA_URL}/rest/v1/pesanan?select=*&order=created_at.desc`,{headers:H});
+      allPesanan=await r.json();window._pesananLoaded=true;
+    }catch{document.getElementById('pesananList').innerHTML='<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Gagal memuat</h3><p>Cek koneksi internet.</p></div>';return;}
+  }
+  renderPesanan();
+}
+
+function filterPesanan(el,status){
+  document.querySelectorAll('#panelPesanan .filter-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');filterPesananAktif=status;renderPesanan();
+}
+
+function renderPesanan(){
+  const q=(document.getElementById('cariPesanan')?.value||'').toLowerCase();
+  let list=allPesanan;
+  if(filterPesananAktif)list=list.filter(p=>(p.status||'').toLowerCase().includes(filterPesananAktif.toLowerCase()));
+  if(q)list=list.filter(p=>(p.order_id||'').toLowerCase().includes(q)||(p.nama_penerima||'').toLowerCase().includes(q));
+  if(!list.length){document.getElementById('pesananList').innerHTML='<div class="empty-state"><i class="fas fa-receipt"></i><h3>Tidak ada pesanan</h3><p>Coba filter lain.</p></div>';return;}
+
+  // Store list for data-idx access
+  window._pesananRendered=list;
+
+  document.getElementById('pesananList').innerHTML=`
+    <div class="data-table">
+      <div class="dt-head" style="grid-template-columns:1fr 140px 110px 170px 80px"><span>Pesanan</span><span>Pembeli</span><span>Total</span><span>Status</span><span></span></div>
+      ${list.map((p,idx)=>`
+      <div class="dt-row" id="prow-${p.order_id}">
+        <div class="dt-row-inner" style="grid-template-columns:1fr 140px 110px 170px 80px">
+          <div><div class="dt-name">#${p.order_id}</div><div class="dt-sub">${fTgl(p.created_at)}</div></div>
+          <div><div class="dt-name" style="font-size:13px">${p.nama_penerima||'-'}</div><div class="dt-sub">${p.hp||''}</div></div>
+          <div class="dt-price">${fRp(p.total)}</div>
+          <div>
+            <select onchange="ubahStatusInline(this,'${p.order_id}')" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:6px 8px;font-size:12px;font-family:inherit;outline:none;color:var(--teks);cursor:pointer">
+              <option value="Menunggu Pembayaran" ${(p.status||'')==='Menunggu Pembayaran'?'selected':''}>⏳ Menunggu Bayar</option>
+              <option value="Diproses" ${p.status==='Diproses'?'selected':''}>⚙️ Diproses</option>
+              <option value="Dikirim" ${p.status==='Dikirim'?'selected':''}>🚚 Dikirim</option>
+              <option value="Selesai" ${p.status==='Selesai'?'selected':''}>✅ Selesai</option>
+              <option value="Dibatalkan" ${p.status==='Dibatalkan'?'selected':''}>❌ Dibatalkan</option>
+            </select>
+          </div>
+          <div class="dt-actions"><button class="btn-edit" data-idx="${idx}" onclick="bukaDetailPesananIdx(this.dataset.idx)"><i class="fas fa-eye"></i> Detail</button></div>
+        </div>
+      </div>`).join('')}
+    </div>`;
+}
+
+async function ubahStatusInline(sel,orderId){
+  const status=sel.value;
+  try{
+    await fetch(`${SUPA_URL}/rest/v1/pesanan?order_id=eq.${orderId}`,{method:'PATCH',headers:H,body:JSON.stringify({status})});
+    const p=allPesanan.find(x=>x.order_id===orderId);if(p)p.status=status;
+    toast('<i class="fas fa-check-circle"></i> Status → '+status);
+    renderDashPesanan();renderDonut();
+    const pending=allPesanan.filter(p=>(p.status||'').toLowerCase().includes('menunggu')).length;
+    document.getElementById('badgePesanan').textContent=pending;
+  }catch{toast('Gagal update status',true);sel.value=allPesanan.find(x=>x.order_id===orderId)?.status||'';}
+}
+
+function bukaDetailPesananIdx(idx){
+  const p=(window._pesananRendered||[])[idx];
+  if(!p)return;
+  bukaDetailPesanan(p.order_id);
+}
+
+function bukaDetailPesanan(orderId){
+  const p=allPesanan.find(x=>x.order_id===orderId);
+  if(!p)return;
+  pesananDetailId=p.order_id;
+  document.getElementById('modalPesananId').textContent='#'+p.order_id+' · '+fTgl(p.created_at);
+  let items=[];try{items=JSON.parse(p.items||'[]');}catch{}
+  const alamatLengkap=[p.alamat,p.kecamatan?'Kec. '+p.kecamatan:'',p.kota,p.provinsi].filter(Boolean).join(', ')||'-';
+  document.getElementById('modalPesananBody').innerHTML=`
+    <div class="pesanan-detail-grid">
+      <div class="pd-item"><label>Nama Penerima</label><span>${p.nama_penerima||'-'}</span></div>
+      <div class="pd-item"><label>No. HP</label><span>${p.hp||'-'}</span></div>
+      <div class="pd-item"><label>Alamat Lengkap</label><span>${alamatLengkap}</span></div>
+      <div class="pd-item"><label>Metode Bayar</label><span>${p.metode_bayar||'-'}</span></div>
+      <div class="pd-item"><label>Total Bayar</label><span style="color:#4ade80;font-weight:800">${fRp(p.total)}</span></div>
+      ${p.catatan?`<div class="pd-item"><label>Catatan</label><span>${p.catatan}</span></div>`:''}
+    </div>
+    <div class="pesanan-items-list">
+      <div style="font-size:11px;font-weight:800;color:var(--abu);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Item Pesanan</div>
+      ${items.length?items.map(it=>`
+        <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px">
+          <span>${it.nama||'-'} <span style="opacity:.6">×${it.jumlah||1}</span></span>
+          <span style="font-weight:700">${fRp((it.harga||0)*(it.jumlah||1))}</span>
+        </div>
+      `).join('')+'<div style="display:flex;justify-content:space-between;padding-top:10px;font-size:14px;font-weight:800"><span>Total</span><span style="color:#4ade80">'+fRp(p.total)+'</span></div>'
+      :'<span style="color:var(--abu)">Data item tidak tersedia</span>'}
+    </div>`;
+  document.getElementById('modalStatusSelect').value=p.status||'Menunggu Pembayaran';
+  document.getElementById('modalPesanan').classList.add('show');
+}
+
+async function updateStatusPesanan(){
+  if(!pesananDetailId)return;
+  const status=document.getElementById('modalStatusSelect').value;
+  try{
+    await fetch(`${SUPA_URL}/rest/v1/pesanan?order_id=eq.${pesananDetailId}`,{method:'PATCH',headers:H,body:JSON.stringify({status})});
+    const p=allPesanan.find(x=>x.order_id===pesananDetailId);if(p)p.status=status;
+    toast('<i class="fas fa-check-circle"></i> Status pesanan diperbarui ke: '+status);
+    document.getElementById('modalPesanan').classList.remove('show');
+    renderPesanan();renderDashPesanan();renderDonut();
+    // Update badge
+    const pending=allPesanan.filter(p=>(p.status||'').toLowerCase().includes('menunggu')).length;
+    document.getElementById('badgePesanan').textContent=pending;
+  }catch{toast('Gagal update status',true);}
+}
+
+/* ═══ PRODUK ═══ */
+async function muatProduk(){
+  if(!window._produkLoaded){
+    try{
+      const r=await fetch(`${SUPA_URL}/rest/v1/produk?select=*&order=created_at.desc`,{headers:H});
+      allProduk=await r.json();window._produkLoaded=true;
+    }catch{document.getElementById('produkList').innerHTML='<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Gagal memuat</h3></div>';return;}
+  }
+  renderProduk();
+}
+
+function filterProduk(el,kat){
+  document.querySelectorAll('#panelProduk .filter-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');filterProdukAktif=kat;renderProduk();
+}
+
+function renderProduk(){
+  const q=(document.getElementById('cariProdukAdmin')?.value||'').toLowerCase();
+  let list=allProduk;
+  if(filterProdukAktif)list=list.filter(p=>p.kategori===filterProdukAktif);
+  if(q)list=list.filter(p=>(p.nama||'').toLowerCase().includes(q));
+  if(!list.length){document.getElementById('produkList').innerHTML='<div class="empty-state"><i class="fas fa-box-open"></i><h3>Tidak ada produk</h3><p>Tambahkan produk baru.</p></div>';return;}
+  document.getElementById('produkList').innerHTML=`
+    <div class="data-table">
+      <div class="dt-head" style="grid-template-columns:56px 1fr 100px 90px 80px 80px 130px"><span></span><span>Produk</span><span>Kategori</span><span>Harga</span><span>Stok</span><span>Badge</span><span style="text-align:right">Aksi</span></div>
+      ${list.map(p=>`
+      <div class="dt-row">
+        <div class="dt-row-inner" style="grid-template-columns:56px 1fr 100px 90px 80px 80px 130px">
+          <div class="dt-thumb">${p.foto_url?`<img src="${p.foto_url}" alt="${p.nama}" onerror="this.parentElement.innerHTML='<i class=\\'fas fa-image\\'></i>'"/>`:'<i class="fas fa-image"></i>'}</div>
+          <div><div class="dt-name">${p.nama}</div><div class="dt-sub">${p.berat||'-'} ${p.harga_asli?'· <s style="opacity:.5">'+fRp(p.harga_asli)+'</s>':''}</div></div>
+          <div><span class="chip-kat">${p.kategori||'-'}</span></div>
+          <div class="dt-price">${fRp(p.harga)}</div>
+          <div class="dt-sub">${p.stok||0} unit</div>
+          <div class="dt-sub" style="font-size:11px">${p.badge||'—'}</div>
+          <div class="dt-actions">
+            <button class="btn-edit" onclick="bukaEditProduk('${p.id}')"><i class="fas fa-edit"></i> Edit</button>
+            <button class="btn-danger" onclick="hapusProduk('${p.id}')"><i class="fas fa-trash"></i></button>
+          </div>
+        </div>
+      </div>`).join('')}
+    </div>`;
+}
+
+/* ─── FOTO PREVIEW ─── */
+function prevFoto(input){
+  const file=input.files[0];if(!file)return;
+  if(file.size>5*1024*1024){toast('File terlalu besar (maks 5MB)',true);return;}
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const img=document.getElementById('tpFotoPreview');
+    img.src=e.target.result;img.style.display='block';
+    document.getElementById('fotoArea').style.display='none';
+    document.getElementById('tpFotoUrl').value='';
+  };
+  reader.readAsDataURL(file);
+}
+function prevFotoUrl(url){
+  if(!url)return;
+  const img=document.getElementById('tpFotoPreview');
+  img.src=url;img.style.display='block';
+  document.getElementById('fotoArea').style.display='none';
+}
+
+/* ─── UPLOAD FOTO KE SUPABASE STORAGE ─── */
+async function uploadFoto(){
+  const fileInput=document.getElementById('tpFotoFile');
+  if(fileInput.files[0]){
+    const file=fileInput.files[0];
+    const ext=file.name.split('.').pop();
+    const namaFile=`produk_${Date.now()}.${ext}`;
+    try{
+      const up=await fetch(`${SUPA_URL}/storage/v1/object/produk-foto/${namaFile}`,{
+        method:'POST',
+        headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':file.type,'x-upsert':'true'},
+        body:file
+      });
+      if(up.ok){
+        return `${SUPA_URL}/storage/v1/object/public/produk-foto/${namaFile}`;
+      }
+    }catch(e){}
+  }
+  // Fallback ke URL manual
+  return document.getElementById('tpFotoUrl').value.trim()||'';
+}
+
+/* ─── SIMPAN PRODUK BARU ─── */
+async function simpanProdukBaru(){
+  const nama=document.getElementById('tpNama').value.trim();
+  const harga=document.getElementById('tpHarga').value;
+  const berat=document.getElementById('tpBerat').value.trim();
+  const stok=document.getElementById('tpStok').value;
+  const kategori=document.getElementById('tpKategori').value;
+  const deskripsi=document.getElementById('tpDeskripsi').value.trim();
+  const harga_asli=document.getElementById('tpHargaAsli').value||null;
+  const badge=document.getElementById('tpBadge').value||null;
+  const editId=document.getElementById('btnSimpan').dataset.editId;
+
+  const msgEl=document.getElementById('msgTambah');
+  if(!nama||!harga||!berat){
+    msgEl.style.cssText='display:flex;background:rgba(220,38,38,.15);border:1px solid rgba(220,38,38,.3);color:#f87171;border-radius:8px;padding:10px 14px;margin-bottom:16px;font-size:13px;font-weight:600;align-items:center;gap:8px';
+    msgEl.innerHTML='<i class="fas fa-exclamation-circle"></i> Nama, harga, dan berat wajib diisi!';
+    return;
+  }
+
+  const btn=document.getElementById('btnSimpan');
+  btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Mengupload & menyimpan...';
+
+  try{
+    const foto_url=await uploadFoto();
+    const payload={
+      nama,kategori,harga:Number(harga),berat,stok:Number(stok)||0,deskripsi,foto_url,
+      ...(harga_asli?{harga_asli:Number(harga_asli)}:{}),
+      ...(badge?{badge}:{})
+    };
+
+    if(editId){
+      // Edit mode
+      await fetch(`${SUPA_URL}/rest/v1/produk?id=eq.${editId}`,{method:'PATCH',headers:H,body:JSON.stringify(payload)});
+      const idx=allProduk.findIndex(p=>p.id==editId);
+      if(idx>-1)allProduk[idx]={...allProduk[idx],...payload};
+      toast('<i class="fas fa-check-circle"></i> Produk berhasil diperbarui!');
+    } else {
+      // New
+      payload.created_at=new Date().toISOString();
+      const res=await fetch(`${SUPA_URL}/rest/v1/produk`,{method:'POST',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify(payload)});
+      const data=await res.json();
+      if(Array.isArray(data)&&data[0])allProduk.unshift(data[0]);
+      toast('<i class="fas fa-check-circle"></i> Produk "'+nama+'" berhasil ditambahkan!');
+    }
+
+    document.getElementById('statProduk').textContent=allProduk.length;
+    msgEl.style.cssText='display:flex;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);color:#4ade80;border-radius:8px;padding:10px 14px;margin-bottom:16px;font-size:13px;font-weight:600;align-items:center;gap:8px';
+    msgEl.innerHTML='<i class="fas fa-check-circle"></i> Berhasil! Produk tersimpan dan langsung tampil di katalog.';
+    resetFormProduk();
+    window._produkLoaded=true;
+
+  }catch(e){
+    msgEl.style.cssText='display:flex;background:rgba(220,38,38,.15);border:1px solid rgba(220,38,38,.3);color:#f87171;border-radius:8px;padding:10px 14px;margin-bottom:16px;font-size:13px;font-weight:600;align-items:center;gap:8px';
+    msgEl.innerHTML='<i class="fas fa-times-circle"></i> Gagal menyimpan. Cek koneksi dan coba lagi.';
+    console.error(e);
+  }finally{
+    btn.disabled=false;
+    btn.innerHTML='<i class="fas fa-save"></i> Simpan Produk';
+  }
+}
+
+function resetFormProduk(){
+  ['tpNama','tpBerat','tpHarga','tpStok','tpDeskripsi','tpHargaAsli','tpFotoUrl'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('tpKategori').value='Beras Putih';
+  document.getElementById('tpBadge').value='';
+  document.getElementById('tpFotoPreview').style.display='none';
+  document.getElementById('tpFotoPreview').src='';
+  document.getElementById('tpFotoFile').value='';
+  document.getElementById('fotoArea').style.display='block';
+  const msgEl=document.getElementById('msgTambah');msgEl.style.display='none';
+  document.getElementById('btnSimpan').dataset.editId='';
+}
+
+function bukaEditProduk(id){
+  const p=allProduk.find(x=>x.id==id);if(!p)return;
+  document.getElementById('epId').value=p.id;
+  document.getElementById('epNama').value=p.nama||'';
+  document.getElementById('epKategori').value=p.kategori||'Beras Putih';
+  document.getElementById('epBerat').value=p.berat||'';
+  document.getElementById('epHarga').value=p.harga||'';
+  document.getElementById('epStok').value=p.stok||'';
+  document.getElementById('epDeskripsi').value=p.deskripsi||'';
+  document.getElementById('epHargaAsli').value=p.harga_asli||'';
+  document.getElementById('epBadge').value=p.badge||'';
+  document.getElementById('epFotoUrl').value=p.foto_url||'';
+  document.getElementById('epFotoPreview').src=p.foto_url||'';
+  document.getElementById('modalEditProduk').classList.add('show');
+}
+
+async function simpanEditProduk(){
+  const id=document.getElementById('epId').value;
+  const payload={
+    nama:document.getElementById('epNama').value.trim(),
+    kategori:document.getElementById('epKategori').value,
+    berat:document.getElementById('epBerat').value.trim(),
+    harga:Number(document.getElementById('epHarga').value)||0,
+    stok:Number(document.getElementById('epStok').value)||0,
+    deskripsi:document.getElementById('epDeskripsi').value.trim(),
+    foto_url:document.getElementById('epFotoUrl').value.trim(),
+    harga_asli:Number(document.getElementById('epHargaAsli').value)||null,
+    badge:document.getElementById('epBadge').value||null
+  };
+  try{
+    await fetch(`${SUPA_URL}/rest/v1/produk?id=eq.${id}`,{method:'PATCH',headers:H,body:JSON.stringify(payload)});
+    const idx=allProduk.findIndex(p=>p.id==id);
+    if(idx>-1)allProduk[idx]={...allProduk[idx],...payload};
+    toast('<i class="fas fa-check-circle"></i> Produk berhasil diperbarui');
+    document.getElementById('modalEditProduk').classList.remove('show');
+    renderProduk();
+  }catch{toast('Gagal menyimpan',true);}
+}
+
+async function hapusProduk(id){
+  const p=allProduk.find(x=>x.id==id);
+  if(!confirm(`Hapus produk "${p?.nama||id}" secara permanen?`))return;
+  try{
+    await fetch(`${SUPA_URL}/rest/v1/produk?id=eq.${id}`,{method:'DELETE',headers:H});
+    allProduk=allProduk.filter(p=>p.id!=id);
+    document.getElementById('statProduk').textContent=allProduk.length;
+    toast('<i class="fas fa-check-circle"></i> Produk dihapus');
+    renderProduk();
+  }catch{toast('Gagal menghapus',true);}
+}
+
+/* ═══ PENGGUNA ═══ */
+async function muatUser(){
+  if(!window._userLoaded){
+    try{
+      const r=await fetch(`${SUPA_URL}/rest/v1/pengguna?select=*&order=created_at.desc`,{headers:H});
+      allUser=await r.json();window._userLoaded=true;
+    }catch{document.getElementById('userList').innerHTML='<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Gagal memuat</h3></div>';return;}
+  }
+  renderUser();
+}
+
+function renderUser(){
+  const q=(document.getElementById('cariUser')?.value||'').toLowerCase();
+  let list=allUser;
+  if(q)list=list.filter(u=>(u.nama||'').toLowerCase().includes(q)||(u.email||'').toLowerCase().includes(q));
+  if(!list.length){
+    document.getElementById('userList').innerHTML=`
+      <div class="empty-state">
+        <i class="fas fa-users"></i>
+        <h3>Belum ada pelanggan terdaftar</h3>
+        <p>Pelanggan yang mendaftar via Email atau Google akan muncul di sini.</p>
+        <a href="https://supabase.com/dashboard/project/vpyvmqovjgyfcawixpbi/auth/users" target="_blank"
+          style="display:inline-flex;align-items:center;gap:6px;background:var(--hijau);color:#fff;padding:9px 18px;border-radius:9px;font-size:13px;font-weight:700;margin-top:12px;text-decoration:none">
+          <i class="fas fa-external-link-alt"></i> Lihat di Supabase Auth
+        </a>
+      </div>`;
+    return;
+  }
+  document.getElementById('userList').innerHTML=`
+    <div class="data-table">
+      <div class="dt-head" style="grid-template-columns:46px 1fr 160px 120px 100px"><span></span><span>Pelanggan</span><span>Email</span><span>HP</span><span>Bergabung</span></div>
+      ${list.map(u=>{
+        const inisial=(u.nama||'?').charAt(0).toUpperCase();
+        const tgl=u.created_at?new Date(u.created_at).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'}):'-';
+        return `
+        <div class="dt-row">
+          <div class="dt-row-inner" style="grid-template-columns:46px 1fr 160px 120px 100px">
+            <div class="dt-thumb" style="background:linear-gradient(135deg,var(--hijau),var(--hijau3));color:#fff;font-weight:800;font-size:16px">${inisial}</div>
+            <div><div class="dt-name">${u.nama||'-'}</div><div class="dt-sub">${u.kota||'—'}</div></div>
+            <div class="dt-sub">${u.email||'-'}</div>
+            <div class="dt-sub">${u.hp||'-'}</div>
+            <div class="dt-sub">${tgl}</div>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>`;
+}
+
+/* ═══ ARTIKEL ═══ */
+let allArtikel=[], editArtikelId=null;
+
+async function muatArtikel(){
+  if(!window._artikelLoaded){
+    try{
+      const r=await fetch(`${SUPA_URL}/rest/v1/artikel?select=*&order=created_at.desc`,{headers:H});
+      allArtikel=await r.json(); window._artikelLoaded=true;
+    }catch{
+      document.getElementById('artikelList').innerHTML='<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><h3>Gagal memuat artikel</h3></div>';
+      return;
+    }
+  }
+  renderArtikel();
+}
+
+function bukaFormArtikel(a=null){
+  editArtikelId=a?a.id:null;
+  document.getElementById('formArtikelTitle').textContent=a?'Edit Artikel':'Tambah Artikel Baru';
+  document.getElementById('artJudul').value=a?a.judul:'';
+  document.getElementById('artKategori').value=a?a.kategori:'Tips Memasak';
+  document.getElementById('artEstimasi').value=a?a.estimasi_baca||'':'';
+  document.getElementById('artGambar').value=a?a.gambar_url||'':'';
+  document.getElementById('artIsi').value=a?a.isi:'';
+  document.getElementById('formArtikelWrap').style.display='block';
+  document.getElementById('formArtikelWrap').scrollIntoView({behavior:'smooth'});
+}
+
+function tutupFormArtikel(){
+  document.getElementById('formArtikelWrap').style.display='none';
+  editArtikelId=null;
+}
+
+async function simpanArtikel(){
+  const judul=document.getElementById('artJudul').value.trim();
+  const isi=document.getElementById('artIsi').value.trim();
+  if(!judul||!isi){toast('<i class="fas fa-exclamation-circle"></i> Judul dan isi artikel wajib diisi!',true);return;}
+  const data={
+    judul,
+    kategori:document.getElementById('artKategori').value,
+    estimasi_baca:document.getElementById('artEstimasi').value.trim()||null,
+    gambar_url:document.getElementById('artGambar').value.trim()||null,
+    isi
+  };
+  try{
+    if(editArtikelId){
+      await fetch(`${SUPA_URL}/rest/v1/artikel?id=eq.${editArtikelId}`,{
+        method:'PATCH',headers:{...H,'Prefer':'return=minimal'},body:JSON.stringify(data)
+      });
+      const idx=allArtikel.findIndex(a=>a.id===editArtikelId);
+      if(idx>-1)allArtikel[idx]={...allArtikel[idx],...data};
+      toast('<i class="fas fa-check-circle"></i> Artikel berhasil diperbarui!');
+    }else{
+      const res=await fetch(`${SUPA_URL}/rest/v1/artikel`,{
+        method:'POST',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify(data)
+      });
+      const baru=await res.json();
+      allArtikel.unshift(baru[0]||{...data,id:Date.now().toString(),created_at:new Date().toISOString()});
+      toast('<i class="fas fa-check-circle"></i> Artikel berhasil ditambahkan! Langsung tampil di halaman Edukasi.');
+    }
+    tutupFormArtikel();
+    renderArtikel();
+  }catch{toast('Gagal menyimpan artikel',true);}
+}
+
+async function hapusArtikel(id,judul){
+  if(!confirm(`Hapus artikel "${judul}"?`))return;
+  try{
+    await fetch(`${SUPA_URL}/rest/v1/artikel?id=eq.${id}`,{method:'DELETE',headers:H});
+    allArtikel=allArtikel.filter(a=>a.id!==id);
+    renderArtikel();
+    toast('<i class="fas fa-check-circle"></i> Artikel dihapus');
+  }catch{toast('Gagal menghapus artikel',true);}
+}
+
+function renderArtikel(){
+  const el=document.getElementById('artikelList');
+  if(!allArtikel.length){
+    el.innerHTML='<div class="empty-state"><i class="fas fa-newspaper"></i><h3>Belum ada artikel</h3><p>Tambah artikel pertama untuk ditampilkan di halaman Edukasi.</p></div>';
+    return;
+  }
+  const EMOJI={'Tips Memasak':'🍚','Varietas':'🌾','Resep':'🍛','Cerita Petani':'👨‍🌾'};
+  el.innerHTML=`<div class="data-table">
+    ${allArtikel.map(a=>`
+    <div class="dt-row">
+      <div class="dt-row-inner" style="grid-template-columns:56px 1fr 100px 100px 140px">
+        <div class="dt-thumb" style="font-size:24px;background:linear-gradient(135deg,#e8f5e9,#f1f8e9)">
+          ${a.gambar_url?`<img src="${a.gambar_url}" alt="${a.judul}" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.innerHTML='${EMOJI[a.kategori]||'📰'}'"/>`:(EMOJI[a.kategori]||'📰')}
+        </div>
+        <div>
+          <div class="dt-name">${a.judul||'-'}</div>
+          <div class="dt-sub">${(a.isi||'').slice(0,80)}${(a.isi||'').length>80?'...':''}</div>
+        </div>
+        <div><span class="chip-kat">${a.kategori||'-'}</span></div>
+        <div class="dt-sub">${a.estimasi_baca||'-'}</div>
+        <div class="dt-actions">
+          <button class="btn-edit" onclick='bukaFormArtikel(${JSON.stringify(a).replace(/'/g,"&#39;")})'>
+            <i class="fas fa-edit"></i> Edit
+          </button>
+          <button class="btn-danger" onclick="hapusArtikel('${a.id}','${(a.judul||'').replace(/'/g,"\\'")}')">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>
+    </div>`).join('')}
+  </div>`;
+}
+
+/* ─── CLOSE MODAL ON BG CLICK ─── */
+document.querySelectorAll('.modal-overlay').forEach(m=>{
+  m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('show');});
+});
+
+/* ─── AUTO LOGIN ─── */
+if(sessionStorage.getItem('admin_sgp')==='1'){
+  document.getElementById('gate').classList.add('hide');
+  document.getElementById('admin').classList.add('show');
+  initAdmin();
+}
+</script>
+</body>
+</html>

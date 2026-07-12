@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Detail Produk — Sigupai Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --hijau:#1e4d2b;--hijau2:#2d6a4f;--hijau3:#40916c;
+  --emas:#c8963e;--emas2:#e9b84a;
+  --krem:#f5f0e8;--teks:#1c1c1c;--abu:#6b7280;--border:#e5e7eb;
+}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--krem);color:var(--teks);font-size:15px}
+a{text-decoration:none;color:inherit}
+
+/* NAVBAR */
+.navbar{background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.navbar-inner{max-width:1280px;margin:0 auto;padding:0 32px;height:72px;display:flex;align-items:center;gap:20px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo img{height:52px}
+.logo-name{font-size:22px;font-weight:800;color:var(--hijau);line-height:1}
+.logo-sub{font-size:10px;font-weight:600;color:var(--emas);letter-spacing:.1em;text-transform:uppercase}
+.search-wrap{flex:1;max-width:560px;display:flex;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;transition:.2s}
+.search-wrap:focus-within{border-color:var(--hijau)}
+.search-wrap input{flex:1;padding:11px 18px;border:none;outline:none;font-family:inherit;font-size:14px;background:#f9fafb}
+.search-wrap button{background:var(--hijau);color:#fff;border:none;padding:0 20px;cursor:pointer;font-size:15px}
+.nav-right{display:flex;align-items:center;gap:2px;margin-left:auto}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 14px;border-radius:10px;cursor:pointer;transition:.15s;color:var(--teks);border:none;background:none;font-family:inherit}
+.nav-item:hover{background:var(--krem)}
+.nav-item .ni-icon{font-size:24px;color:var(--hijau)}
+.nav-item-text strong{font-size:13px;font-weight:700;display:block}
+.nav-item-text span{font-size:12px;color:var(--abu)}
+.cart-wrap{position:relative}
+.cart-badge{position:absolute;top:-2px;right:-2px;background:var(--emas);color:#fff;font-size:10px;font-weight:700;min-width:17px;height:17px;border-radius:20px;display:none;align-items:center;justify-content:center;padding:0 3px}
+
+/* BREADCRUMB */
+.breadcrumb{background:#fff;border-bottom:1px solid var(--border);padding:12px 0}
+.bc-inner{max-width:1280px;margin:0 auto;padding:0 32px;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--abu);flex-wrap:wrap}
+.bc-inner a{color:var(--hijau);font-weight:600}
+.bc-inner a:hover{text-decoration:underline}
+
+/* LAYOUT */
+.detail-wrap{max-width:1280px;margin:0 auto;padding:36px 32px}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+
+/* GAMBAR */
+.img-main{border-radius:16px;overflow:hidden;aspect-ratio:1;background:#ede8dc;position:relative}
+.img-main img{width:100%;height:100%;object-fit:cover}
+.img-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:120px;background:linear-gradient(135deg,#e8f5e9,#f1f8e9)}
+.badge-produk{position:absolute;top:16px;left:16px;font-size:12px;font-weight:800;padding:6px 14px;border-radius:20px;color:#fff}
+.badge-terlaris{background:#e53935}
+.badge-baru{background:var(--hijau2)}
+.badge-premium{background:var(--emas)}
+.badge-bibit{background:#7b1fa2}
+
+/* INFO PRODUK */
+.prod-info{}
+.prod-kategori{display:inline-flex;align-items:center;gap:6px;background:rgba(30,77,43,.08);color:var(--hijau);font-size:12px;font-weight:700;padding:5px 12px;border-radius:20px;margin-bottom:12px;text-transform:uppercase;letter-spacing:.05em}
+.prod-nama{font-size:32px;font-weight:800;line-height:1.2;margin-bottom:10px}
+.prod-berat{font-size:14px;color:var(--abu);margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.prod-rating{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.prod-stars{color:#f59e0b;font-size:16px;letter-spacing:2px}
+.prod-rating-count{font-size:13px;color:var(--abu)}
+.prod-stok-badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:4px 12px;border-radius:20px}
+.stok-ada{background:#dcfce7;color:#15803d}
+.stok-habis{background:#fef2f2;color:#dc2626}
+.stok-sedikit{background:#fff7ed;color:#c2740d}
+
+.harga-wrap{margin:20px 0;padding:20px;background:var(--krem);border-radius:14px}
+.harga-asli{font-size:14px;color:var(--abu);text-decoration:line-through;margin-bottom:4px}
+.harga-utama{font-size:36px;font-weight:800;color:var(--hijau);line-height:1}
+.harga-diskon{display:inline-flex;align-items:center;gap:6px;background:#dcfce7;color:#15803d;font-size:13px;font-weight:700;padding:4px 10px;border-radius:8px;margin-top:8px}
+
+.qty-row{display:flex;align-items:center;gap:16px;margin-bottom:20px}
+.qty-label{font-size:14px;font-weight:700;color:var(--teks)}
+.qty-ctrl{display:flex;align-items:center;border:1.5px solid var(--border);border-radius:10px;overflow:hidden}
+.qty-btn{width:40px;height:40px;background:#fff;border:none;cursor:pointer;font-size:20px;font-weight:700;color:var(--hijau);transition:.15s;font-family:inherit}
+.qty-btn:hover{background:var(--krem)}
+.qty-num{width:50px;text-align:center;font-size:16px;font-weight:800;border:none;outline:none;font-family:inherit;background:#fff}
+.qty-stok-info{font-size:12px;color:var(--abu)}
+
+.aksi-row{display:flex;gap:12px;margin-bottom:24px}
+.btn-keranjang{flex:1;background:var(--hijau);color:#fff;border:none;padding:15px 24px;border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:10px;transition:.2s}
+.btn-keranjang:hover{background:var(--hijau2);transform:translateY(-1px)}
+.btn-keranjang:disabled{background:#9ca3af;cursor:not-allowed;transform:none}
+.btn-wishlist{width:52px;height:52px;border:1.5px solid var(--border);background:#fff;border-radius:12px;cursor:pointer;font-size:20px;color:var(--abu);display:flex;align-items:center;justify-content:center;transition:.2s;flex-shrink:0}
+.btn-wishlist:hover{border-color:#e53935;color:#e53935}
+.btn-wishlist.active{border-color:#e53935;color:#e53935;background:#fef2f2}
+
+.btn-beli-sekarang{width:100%;background:var(--emas);color:#fff;border:none;padding:14px;border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:10px;transition:.2s;margin-bottom:20px}
+.btn-beli-sekarang:hover{background:#b8852e;transform:translateY(-1px)}
+.btn-beli-sekarang:disabled{background:#9ca3af;cursor:not-allowed;transform:none}
+
+/* INFO PENGIRIMAN */
+.info-chips{display:flex;flex-direction:column;gap:10px}
+.info-chip{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:12px 16px}
+.info-chip-icon{width:36px;height:36px;border-radius:9px;background:rgba(30,77,43,.08);color:var(--hijau);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.info-chip-text{font-size:13px}
+.info-chip-text strong{display:block;font-weight:700;margin-bottom:1px}
+.info-chip-text span{color:var(--abu)}
+
+/* DESKRIPSI & TAB */
+.detail-bottom{margin-top:48px}
+.tab-nav{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:28px}
+.tab-btn{padding:12px 24px;font-size:14px;font-weight:700;color:var(--abu);background:none;border:none;cursor:pointer;font-family:inherit;border-bottom:3px solid transparent;margin-bottom:-2px;transition:.15s}
+.tab-btn.active{color:var(--hijau);border-bottom-color:var(--hijau)}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+.deskripsi-content{font-size:14px;line-height:1.9;color:var(--teks);max-width:680px}
+.deskripsi-content p{margin-bottom:12px}
+.spek-table{width:100%;max-width:600px;border-collapse:collapse}
+.spek-table tr{border-bottom:1px solid var(--border)}
+.spek-table td{padding:12px 16px;font-size:14px}
+.spek-table td:first-child{font-weight:700;color:var(--abu);width:180px;background:#fff}
+.spek-table td:last-child{background:#f9fafb;font-weight:600}
+
+/* PRODUK TERKAIT */
+.related-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.prod-card{background:#fff;border-radius:14px;overflow:hidden;border:1px solid var(--border);cursor:pointer;transition:.2s;display:block;color:inherit}
+.prod-card:hover{transform:translateY(-4px);box-shadow:0 10px 28px rgba(0,0,0,.1)}
+.prod-card-img{aspect-ratio:1;overflow:hidden;background:#ede8dc}
+.prod-card-img img{width:100%;height:100%;object-fit:cover;transition:.3s}
+.prod-card:hover .prod-card-img img{transform:scale(1.05)}
+.prod-card-body{padding:14px}
+.prod-card-nama{font-size:13px;font-weight:700;margin-bottom:4px;line-height:1.3}
+.prod-card-berat{font-size:12px;color:var(--abu);margin-bottom:8px}
+.prod-card-footer{display:flex;justify-content:space-between;align-items:center}
+.prod-card-harga{font-size:15px;font-weight:800;color:var(--hijau)}
+.btn-cart-sm{background:var(--hijau);color:#fff;border:none;width:30px;height:30px;border-radius:7px;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center}
+
+/* SKELETON */
+.skel{background:linear-gradient(90deg,#f0f0f0 25%,#e8e8e8 50%,#f0f0f0 75%);background-size:200% 100%;animation:sk 1.4s infinite;border-radius:8px}
+@keyframes sk{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* ERROR */
+.error-state{text-align:center;padding:80px 20px}
+.error-state i{font-size:64px;color:#d1d5db;margin-bottom:20px}
+.error-state h2{font-size:22px;font-weight:800;margin-bottom:8px}
+.error-state p{font-size:14px;color:var(--abu);margin-bottom:24px}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--hijau);color:#fff;padding:14px 20px;border-radius:12px;font-size:14px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.2);transform:translateY(80px);opacity:0;transition:.3s;z-index:9999;display:flex;align-items:center;gap:8px}
+.toast.show{transform:translateY(0);opacity:1}
+
+/* SHARE */
+.share-row{display:flex;align-items:center;gap:10px;padding-top:16px;border-top:1px solid var(--border)}
+.share-label{font-size:13px;font-weight:700;color:var(--abu)}
+.share-btn{width:34px;height:34px;border-radius:8px;border:1.5px solid var(--border);background:#fff;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;color:var(--abu);transition:.15s}
+.share-btn:hover{border-color:var(--hijau);color:var(--hijau)}
+
+@media(max-width:900px){
+  .detail-grid{grid-template-columns:1fr;gap:28px}
+  .related-grid{grid-template-columns:repeat(2,1fr)}
+  .prod-nama{font-size:24px}
+}
+@media(max-width:600px){
+  .detail-wrap{padding:20px 16px}
+  .navbar-inner{padding:0 16px}
+  .bc-inner{padding:0 16px}
+  .aksi-row{flex-wrap:wrap}
+  .btn-keranjang{flex:1 1 calc(100% - 64px)}
+  .related-grid{grid-template-columns:repeat(2,1fr);gap:10px}
+  .harga-utama{font-size:28px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="logo">
+      <img src="img/logo.png" alt="Sigupai"/>
+      <div>
+        <div class="logo-name">Sigupai</div>
+        <div class="logo-sub">Beras Khas Abdya</div>
+      </div>
+    </a>
+    <div class="search-wrap">
+      <input type="text" placeholder="Cari beras, bibit, varietas..."
+             onkeypress="if(event.key==='Enter')window.location.href='katalog.html?q='+encodeURIComponent(this.value)"/>
+      <button onclick="window.location.href='katalog.html'"><i class="fas fa-search"></i></button>
+    </div>
+    <div class="nav-right">
+      <a href="akun.html" class="nav-item">
+        <i class="far fa-user ni-icon"></i>
+        <div class="nav-item-text"><strong id="navNama">Masuk</strong><span>Akun saya</span></div>
+      </a>
+      <a href="keranjang.html" class="nav-item cart-wrap">
+        <i class="fas fa-shopping-cart ni-icon"></i>
+        <div class="nav-item-text"><strong>Keranjang</strong><span>Belanjaan Anda</span></div>
+        <span class="cart-badge" id="cartBadge">0</span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb">
+  <div class="bc-inner">
+    <a href="index.html"><i class="fas fa-home"></i> Beranda</a>
+    <i class="fas fa-chevron-right" style="font-size:10px"></i>
+    <a href="katalog.html">Katalog</a>
+    <i class="fas fa-chevron-right" style="font-size:10px"></i>
+    <span id="bcNama">Memuat...</span>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="detail-wrap">
+
+  <!-- LOADING STATE -->
+  <div id="stateLoading">
+    <div class="detail-grid">
+      <div class="skel" style="aspect-ratio:1;border-radius:16px"></div>
+      <div>
+        <div class="skel" style="height:20px;width:100px;margin-bottom:16px"></div>
+        <div class="skel" style="height:36px;margin-bottom:10px"></div>
+        <div class="skel" style="height:18px;width:60%;margin-bottom:20px"></div>
+        <div class="skel" style="height:90px;border-radius:14px;margin-bottom:20px"></div>
+        <div class="skel" style="height:52px;border-radius:12px;margin-bottom:12px"></div>
+        <div class="skel" style="height:52px;border-radius:12px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ERROR STATE -->
+  <div id="stateError" style="display:none">
+    <div class="error-state">
+      <i class="fas fa-box-open"></i>
+      <h2>Produk tidak ditemukan</h2>
+      <p>Produk yang Anda cari tidak tersedia atau sudah dihapus.</p>
+      <a href="katalog.html" style="background:var(--hijau);color:#fff;padding:13px 28px;border-radius:10px;font-size:14px;font-weight:700;display:inline-flex;align-items:center;gap:8px">
+        <i class="fas fa-arrow-left"></i> Kembali ke Katalog
+      </a>
+    </div>
+  </div>
+
+  <!-- DETAIL PRODUK -->
+  <div id="stateDetail" style="display:none">
+    <div class="detail-grid">
+
+      <!-- KOLOM KIRI: GAMBAR -->
+      <div>
+        <div class="img-main" id="imgWrap">
+          <div class="img-placeholder">🌾</div>
+        </div>
+      </div>
+
+      <!-- KOLOM KANAN: INFO -->
+      <div class="prod-info">
+        <div class="prod-kategori"><i class="fas fa-tag"></i><span id="prodKategori">—</span></div>
+        <h1 class="prod-nama" id="prodNama">—</h1>
+        <div class="prod-berat"><i class="fas fa-weight" style="color:var(--hijau)"></i><span id="prodBerat">—</span></div>
+
+        <div class="prod-rating">
+          <div class="prod-stars">★★★★★</div>
+          <div class="prod-rating-count" id="prodRating">4.9 · 120 ulasan</div>
+          <div style="width:4px;height:4px;border-radius:50%;background:var(--border)"></div>
+          <div id="prodStokBadge" class="prod-stok-badge stok-ada"><i class="fas fa-check-circle"></i> Stok Tersedia</div>
+        </div>
+
+        <!-- HARGA -->
+        <div class="harga-wrap">
+          <div class="harga-asli" id="hargaAsliWrap" style="display:none">
+            <span id="prodHargaAsli"></span>
+          </div>
+          <div class="harga-utama" id="prodHarga">Rp 0</div>
+          <div class="harga-diskon" id="diskonWrap" style="display:none">
+            <i class="fas fa-tag"></i> Hemat <span id="diskonPersen"></span>
+          </div>
+        </div>
+
+        <!-- QTY -->
+        <div class="qty-row">
+          <div class="qty-label">Jumlah:</div>
+          <div class="qty-ctrl">
+            <button class="qty-btn" onclick="ubahQty(-1)">−</button>
+            <input class="qty-num" id="qtyInput" type="number" value="1" min="1" readonly/>
+            <button class="qty-btn" onclick="ubahQty(1)">+</button>
+          </div>
+          <div class="qty-stok-info">Stok: <strong id="prodStok">0</strong> unit</div>
+        </div>
+
+        <!-- TOMBOL AKSI -->
+        <div class="aksi-row">
+          <button class="btn-keranjang" id="btnKeranjang" onclick="tambahKeranjang()">
+            <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+          </button>
+          <button class="btn-wishlist" id="btnWishlist" onclick="toggleWishlist()" title="Simpan ke wishlist">
+            <i class="far fa-heart"></i>
+          </button>
+        </div>
+        <button class="btn-beli-sekarang" id="btnBeli" onclick="beliSekarang()">
+          <i class="fas fa-bolt"></i> Beli Sekarang
+        </button>
+
+        <!-- INFO PENGIRIMAN -->
+        <div class="info-chips">
+          
+          <div class="info-chip">
+            <div class="info-chip-icon"><i class="fas fa-shield-alt"></i></div>
+            <div class="info-chip-text">
+              <strong>Produk Terverifikasi</strong>
+              <span>Beras asli khas Abdya · Sertifikasi Indikasi Geografis</span>
+            </div>
+          </div>
+          <div class="info-chip">
+            <div class="info-chip-icon"><i class="fas fa-undo-alt"></i></div>
+            <div class="info-chip-text">
+              <strong>Garansi Kualitas</strong>
+              <span>Produk tidak sesuai? Kami siap bantu proses retur</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SHARE -->
+        <div class="share-row" style="margin-top:16px">
+          <span class="share-label">Bagikan:</span>
+          <button class="share-btn" onclick="shareWA()" title="WhatsApp"><i class="fab fa-whatsapp"></i></button>
+          <button class="share-btn" onclick="shareFB()" title="Facebook"><i class="fab fa-facebook"></i></button>
+          <button class="share-btn" onclick="salinLink()" title="Salin tautan"><i class="fas fa-link"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB DESKRIPSI & SPESIFIKASI -->
+    <div class="detail-bottom">
+      <div class="tab-nav">
+        <button class="tab-btn active" onclick="gantiTab(this,'tabDeskripsi')">Deskripsi Produk</button>
+        <button class="tab-btn" onclick="gantiTab(this,'tabSpesifikasi')">Spesifikasi</button>
+        <button class="tab-btn" onclick="gantiTab(this,'tabPengiriman')">Info Pengiriman</button>
+      </div>
+
+      <div class="tab-panel active" id="tabDeskripsi">
+        <div class="deskripsi-content" id="prodDeskripsi">
+          <p>Memuat deskripsi produk...</p>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="tabSpesifikasi">
+        <table class="spek-table" id="spekTable">
+          <tr><td>Nama Produk</td><td id="spekNama">—</td></tr>
+          <tr><td>Kategori</td><td id="spekKategori">—</td></tr>
+          <tr><td>Berat / Kemasan</td><td id="spekBerat">—</td></tr>
+          <tr><td>Harga</td><td id="spekHarga">—</td></tr>
+          <tr><td>Stok Tersedia</td><td id="spekStok">—</td></tr>
+          <tr><td>Asal Produk</td><td>Aceh Barat Daya (Abdya), Aceh</td></tr>
+          <tr><td>Sertifikasi</td><td>Indikasi Geografis Breuh Sigupai</td></tr>
+          <tr><td>Toko</td><td>Sigupai Store</td></tr>
+        </table>
+      </div>
+
+      <div class="tab-panel" id="tabPengiriman">
+        <div class="deskripsi-content">
+          <p><strong>Estimasi Pengiriman:</strong> 2–5 hari kerja ke seluruh Indonesia, tergantung kurir dan lokasi tujuan.</p>
+          <p><strong>Kurir Tersedia:</strong> JNE, J&T Express, SiCepat, TIKI, dan COD (khusus area tertentu).</p>
+          <p><strong>Kemasan:</strong> Produk dikemas rapi menggunakan plastik food-grade untuk menjaga kebersihan dan kualitas beras selama pengiriman.</p>
+          <p><strong>Catatan:</strong> Untuk pemesanan dalam jumlah besar (grosir), hubungi kami melalui WhatsApp untuk mendapatkan harga spesial dan pengiriman langsung dari gudang.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUK TERKAIT -->
+    <div style="margin-top:52px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+        <h2 style="font-size:20px;font-weight:800">Produk Terkait</h2>
+        <a href="katalog.html" style="font-size:13.5px;font-weight:600;color:var(--hijau)">Lihat semua &rsaquo;</a>
+      </div>
+      <div class="related-grid" id="relatedGrid">
+        <div style="background:#fff;border-radius:14px;overflow:hidden;border:1px solid var(--border)"><div class="skel" style="aspect-ratio:1;border-radius:0"></div><div style="padding:14px"><div class="skel" style="height:13px;margin-bottom:8px"></div><div class="skel" style="height:16px;width:60%"></div></div></div>
+        <div style="background:#fff;border-radius:14px;overflow:hidden;border:1px solid var(--border)"><div class="skel" style="aspect-ratio:1;border-radius:0"></div><div style="padding:14px"><div class="skel" style="height:13px;margin-bottom:8px"></div><div class="skel" style="height:16px;width:60%"></div></div></div>
+        <div style="background:#fff;border-radius:14px;overflow:hidden;border:1px solid var(--border)"><div class="skel" style="aspect-ratio:1;border-radius:0"></div><div style="padding:14px"><div class="skel" style="height:13px;margin-bottom:8px"></div><div class="skel" style="height:16px;width:60%"></div></div></div>
+        <div style="background:#fff;border-radius:14px;overflow:hidden;border:1px solid var(--border)"><div class="skel" style="aspect-ratio:1;border-radius:0"></div><div style="padding:14px"><div class="skel" style="height:13px;margin-bottom:8px"></div><div class="skel" style="height:16px;width:60%"></div></div></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /detail-wrap -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SUPA_URL='https://vpyvmqovjgyfcawixpbi.supabase.co';
+const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZweXZtcW92amd5ZmNhd2l4cGJpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI2NTg5MjYsImV4cCI6MjA5ODIzNDkyNn0.TpjR5sG072VgdGiiu9RNjwAAwhy37cjFqXalGjwxoBw';
+
+/* ── GAMBAR FALLBACK PER KATEGORI ── */
+const IMG_MAP={
+  'Beras Putih':'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=600&q=80',
+  'Beras Merah':'https://images.unsplash.com/photo-1536304929831-ee1ca9d44906?w=600&q=80',
+  'Bibit':'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=600&q=80',
+  'Grosir':'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=600&q=80',
+};
+const IMG_THUMB={
+  'Beras Putih':'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=300&q=70',
+  'Beras Merah':'https://images.unsplash.com/photo-1536304929831-ee1ca9d44906?w=300&q=70',
+  'Bibit':'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=300&q=70',
+  'Grosir':'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=300&q=70',
+};
+
+let produk=null;
+let qty=1;
+let keranjang=JSON.parse(localStorage.getItem('keranjang_sigupai')||'[]');
+
+/* ── CART BADGE ── */
+function updateBadge(){
+  const total=keranjang.reduce((a,b)=>a+b.jumlah,0);
+  const el=document.getElementById('cartBadge');
+  if(total>0){el.style.display='flex';el.textContent=total;}else el.style.display='none';
+}
+
+/* ── TOAST ── */
+function toast(msg,err=false){
+  const t=document.getElementById('toast');
+  t.style.background=err?'#dc2626':'var(--hijau)';
+  t.innerHTML=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2600);
+}
+
+/* ── FORMAT ── */
+function fRp(n){return 'Rp '+Number(n||0).toLocaleString('id-ID')}
+
+/* ── URL PARAM ── */
+function getParam(key){return new URLSearchParams(window.location.search).get(key);}
+
+/* ── LOAD PRODUK ── */
+async function loadProduk(){
+  const id=getParam('id');
+  if(!id){tampilError();return;}
+
+  try{
+    const res=await fetch(
+      `${SUPA_URL}/rest/v1/produk?id=eq.${encodeURIComponent(id)}&select=*`,
+      {headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}}
+    );
+    const data=await res.json();
+    if(!data||!data.length){tampilError();return;}
+    produk=data[0];
+    renderDetail();
+    loadRelated();
+  }catch{
+    tampilError();
+  }
+}
+
+function tampilError(){
+  document.getElementById('stateLoading').style.display='none';
+  document.getElementById('stateError').style.display='block';
+}
+
+function renderDetail(){
+  document.getElementById('stateLoading').style.display='none';
+  document.getElementById('stateDetail').style.display='block';
+
+  /* title & breadcrumb */
+  document.title=produk.nama+' — Sigupai Store';
+  document.getElementById('bcNama').textContent=produk.nama||'Detail Produk';
+
+  /* gambar */
+  const imgUrl=produk.foto_url||(IMG_MAP[produk.kategori]||IMG_MAP['Beras Putih']);
+  const wrap=document.getElementById('imgWrap');
+  wrap.innerHTML='';
+  const img=document.createElement('img');
+  img.src=imgUrl;
+  img.alt=produk.nama||'Produk';
+  img.onerror=()=>{img.src=IMG_MAP[produk.kategori]||IMG_MAP['Beras Putih'];};
+  wrap.appendChild(img);
+  /* badge */
+  if(produk.badge){
+    const badgeCls={'Terlaris':'badge-terlaris','Baru':'badge-baru','Premium':'badge-premium','Bibit Unggul':'badge-bibit'};
+    const span=document.createElement('span');
+    span.className='badge-produk '+(badgeCls[produk.badge]||'badge-baru');
+    span.textContent=produk.badge;
+    wrap.appendChild(span);
+  }
+
+  /* info dasar */
+  document.getElementById('prodKategori').textContent=produk.kategori||'Produk';
+  document.getElementById('prodNama').textContent=produk.nama||'—';
+  document.getElementById('prodBerat').textContent=(produk.berat||'—')+' · Produk Abdya Asli';
+
+  /* rating acak tapi konsisten */
+  const rng=parseInt(produk.id?.replace(/\D/g,'')||'0')%40;
+  document.getElementById('prodRating').textContent=`4.${7+rng%3} · ${60+rng*2} ulasan`;
+
+  /* stok */
+  const stok=Number(produk.stok)||0;
+  document.getElementById('prodStok').textContent=stok;
+  const sbadge=document.getElementById('prodStokBadge');
+  if(stok===0){
+    sbadge.className='prod-stok-badge stok-habis';
+    sbadge.innerHTML='<i class="fas fa-times-circle"></i> Stok Habis';
+    document.getElementById('btnKeranjang').disabled=true;
+    document.getElementById('btnBeli').disabled=true;
+  }else if(stok<=10){
+    sbadge.className='prod-stok-badge stok-sedikit';
+    sbadge.innerHTML=`<i class="fas fa-exclamation-circle"></i> Sisa ${stok} unit`;
+  }else{
+    sbadge.className='prod-stok-badge stok-ada';
+    sbadge.innerHTML='<i class="fas fa-check-circle"></i> Stok Tersedia';
+  }
+
+  /* harga */
+  document.getElementById('prodHarga').textContent=fRp(produk.harga);
+  if(produk.harga_asli&&produk.harga_asli>produk.harga){
+    document.getElementById('prodHargaAsli').textContent=fRp(produk.harga_asli);
+    document.getElementById('hargaAsliWrap').style.display='block';
+    const persen=Math.round((1-produk.harga/produk.harga_asli)*100);
+    document.getElementById('diskonPersen').textContent=persen+'%';
+    document.getElementById('diskonWrap').style.display='inline-flex';
+  }
+
+  /* deskripsi */
+  const desk=produk.deskripsi||`${produk.nama} adalah produk unggulan dari Aceh Barat Daya (Abdya). Dipilih langsung dari petani lokal terpercaya dengan standar kualitas tinggi. Cocok untuk konsumsi sehari-hari maupun untuk keperluan khusus.`;
+  document.getElementById('prodDeskripsi').innerHTML=desk.split('\n').filter(Boolean).map(p=>`<p>${p}</p>`).join('')||`<p>${desk}</p>`;
+
+  /* spesifikasi */
+  document.getElementById('spekNama').textContent=produk.nama||'—';
+  document.getElementById('spekKategori').textContent=produk.kategori||'—';
+  document.getElementById('spekBerat').textContent=produk.berat||'—';
+  document.getElementById('spekHarga').textContent=fRp(produk.harga);
+  document.getElementById('spekStok').textContent=stok+' unit';
+
+  /* qty max */
+  document.getElementById('qtyInput').max=stok||1;
+}
+
+/* ── QTY ── */
+function ubahQty(delta){
+  const stok=Number(produk?.stok)||0;
+  qty=Math.max(1,Math.min(stok||1,qty+delta));
+  document.getElementById('qtyInput').value=qty;
+}
+
+/* ── KERANJANG ── */
+function tambahKeranjang(){
+  if(!produk)return;
+  const i=keranjang.findIndex(k=>k.id===produk.id);
+  if(i>-1)keranjang[i].jumlah+=qty;
+  else keranjang.push({id:produk.id,nama:produk.nama,harga:produk.harga,jumlah:qty});
+  localStorage.setItem('keranjang_sigupai',JSON.stringify(keranjang));
+  updateBadge();
+  toast(`<i class="fas fa-check-circle"></i> ${qty > 1 ? qty+'× ' : ''}${produk.nama} ditambahkan ke keranjang!`);
+}
+
+/* ── BELI SEKARANG ── */
+function beliSekarang(){
+  tambahKeranjang();
+  setTimeout(()=>window.location.href='keranjang.html',500);
+}
+
+/* ── WISHLIST ── */
+function toggleWishlist(){
+  const btn=document.getElementById('btnWishlist');
+  const isActive=btn.classList.toggle('active');
+  btn.innerHTML=isActive?'<i class="fas fa-heart"></i>':'<i class="far fa-heart"></i>';
+  toast(isActive?'<i class="fas fa-heart"></i> Disimpan ke wishlist':'Dihapus dari wishlist');
+}
+
+/* ── TAB ── */
+function gantiTab(btn,panelId){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(panelId).classList.add('active');
+}
+
+/* ── SHARE ── */
+function shareWA(){
+  const url=encodeURIComponent(window.location.href);
+  const txt=encodeURIComponent(`Lihat produk ini dari Sigupai: ${produk?.nama||''}`);
+  window.open(`https://wa.me/?text=${txt}%20${url}`,'_blank');
+}
+function shareFB(){
+  window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`,'_blank');
+}
+function salinLink(){
+  navigator.clipboard.writeText(window.location.href).then(()=>{
+    toast('<i class="fas fa-link"></i> Tautan berhasil disalin!');
+  });
+}
+
+/* ── PRODUK TERKAIT ── */
+async function loadRelated(){
+  if(!produk)return;
+  try{
+    const res=await fetch(
+      `${SUPA_URL}/rest/v1/produk?kategori=eq.${encodeURIComponent(produk.kategori)}&id=neq.${encodeURIComponent(produk.id)}&limit=4&select=*`,
+      {headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}}
+    );
+    let data=await res.json();
+    /* kalau kurang dari 4, ambil produk lain kategori berbeda */
+    if(data.length<4){
+      const res2=await fetch(
+        `${SUPA_URL}/rest/v1/produk?id=neq.${encodeURIComponent(produk.id)}&limit=${4-data.length}&select=*`,
+        {headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}}
+      );
+      const data2=await res2.json();
+      data=[...data,...data2].slice(0,4);
+    }
+    renderRelated(data);
+  }catch{
+    document.getElementById('relatedGrid').innerHTML='';
+  }
+}
+
+function renderRelated(list){
+  if(!list.length){document.getElementById('relatedGrid').innerHTML='';return;}
+  document.getElementById('relatedGrid').innerHTML=list.map(p=>{
+    const imgUrl=p.foto_url||(IMG_THUMB[p.kategori]||IMG_THUMB['Beras Putih']);
+    return `<a href="detail.html?id=${encodeURIComponent(p.id)}" class="prod-card">
+      <div class="prod-card-img">
+        <img src="${imgUrl}" alt="${p.nama||''}" loading="lazy"
+             onerror="this.src='${IMG_THUMB[p.kategori]||IMG_THUMB['Beras Putih']}'"/>
+      </div>
+      <div class="prod-card-body">
+        <div class="prod-card-nama">${p.nama||'—'}</div>
+        <div class="prod-card-berat">${p.berat||''}</div>
+        <div class="prod-card-footer">
+          <div class="prod-card-harga">${fRp(p.harga)}</div>
+          <button class="btn-cart-sm" onclick="tambahRelated(event,'${p.id}','${(p.nama||'').replace(/'/g,"\\'")}',${p.harga})">
+            <i class="fas fa-cart-plus"></i>
+          </button>
+        </div>
+      </div>
+    </a>`;
+  }).join('');
+}
+
+function tambahRelated(e,id,nama,harga){
+  e.preventDefault();e.stopPropagation();
+  const i=keranjang.findIndex(k=>k.id===id);
+  if(i>-1)keranjang[i].jumlah++;
+  else keranjang.push({id,nama,harga,jumlah:1});
+  localStorage.setItem('keranjang_sigupai',JSON.stringify(keranjang));
+  updateBadge();
+  toast(`<i class="fas fa-check-circle"></i> ${nama} ditambahkan!`);
+}
+
+/* ── INIT ── */
+const user=JSON.parse(localStorage.getItem('user_sigupai')||'null');
+if(user)document.getElementById('navNama').textContent=user.nama?.split(' ')[0]||'Akun';
+updateBadge();
+loadProduk();
+</script>
+</body>
+</html>

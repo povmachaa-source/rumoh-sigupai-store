@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Tentang Kami — Sigupai</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--hijau:#1e4d2b;--hijau2:#2d6a4f;--hijau3:#40916c;--emas:#c8963e;--emas2:#e9b84a;--krem:#f5f0e8;--putih:#fff;--teks:#1c1c1c;--abu:#6b7280;--border:#e5e7eb;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:#f5f0e8;color:var(--teks);font-size:15px;padding-bottom:80px}
+a{text-decoration:none;color:inherit}
+
+.navbar{background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.navbar-inner{max-width:1280px;margin:0 auto;padding:0 20px;height:64px;display:flex;align-items:center;gap:16px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo img{height:44px}
+.logo-name{font-size:20px;font-weight:800;color:var(--hijau);line-height:1}
+.logo-sub{font-size:9px;font-weight:600;color:var(--emas);letter-spacing:.1em;text-transform:uppercase}
+.page-title{font-size:18px;font-weight:800;margin-left:8px}
+.nav-back{width:38px;height:38px;border-radius:10px;background:#f5f0e8;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--teks)}
+
+.tt-hero{position:relative;height:340px;overflow:hidden;background:#1a3a1a}
+.tt-hero-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.tt-hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,30,5,.55) 0%,rgba(5,30,5,.78) 100%)}
+.tt-hero-inner{position:relative;z-index:2;max-width:900px;margin:0 auto;padding:0 24px;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.tt-hero-label{display:inline-flex;align-items:center;gap:6px;color:var(--emas2);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px}
+.tt-hero h1{font-size:36px;font-weight:800;color:#fff;line-height:1.25;margin-bottom:12px}
+.tt-hero p{color:rgba(255,255,255,.82);font-size:14.5px;line-height:1.7;max-width:560px}
+
+.main{max-width:1040px;margin:0 auto;padding:0 20px}
+
+.stat-strip{background:#fff;border-radius:18px;margin-top:-36px;position:relative;z-index:3;box-shadow:0 10px 32px rgba(0,0,0,.08);display:grid;grid-template-columns:repeat(4,1fr);overflow:hidden;margin-bottom:48px}
+.stat-item{padding:24px 16px;text-align:center;border-right:1px solid var(--border)}
+.stat-item:last-child{border-right:none}
+.stat-num{font-size:26px;font-weight:800;color:var(--hijau);margin-bottom:3px}
+.stat-label{font-size:12px;color:var(--abu);font-weight:600}
+
+.tt-section{padding:0 0 56px}
+.tt-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+.tt-img{border-radius:20px;overflow:hidden;aspect-ratio:4/3}
+.tt-img img{width:100%;height:100%;object-fit:cover}
+.tt-label{font-size:12px;font-weight:700;color:var(--hijau);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
+.tt-title{font-size:28px;font-weight:800;line-height:1.25;margin-bottom:16px}
+.tt-desc{color:var(--abu);line-height:1.85;font-size:14.5px;margin-bottom:16px}
+.tt-desc:last-child{margin-bottom:0}
+
+/* BADGE LEGALITAS */
+.legalitas-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:20px}
+.legal-item{display:flex;align-items:center;gap:10px;background:rgba(30,77,43,.06);padding:10px 14px;border-radius:10px;font-size:13px;font-weight:600;color:var(--hijau)}
+.legal-item i{font-size:16px}
+
+.values-section{background:#fff;padding:56px 0;margin-bottom:56px}
+.sec-hd-center{text-align:center;max-width:560px;margin:0 auto 36px}
+.sec-hd-center .tt-label{justify-content:center;display:flex}
+.sec-hd-center h2{font-size:26px;font-weight:800;margin-bottom:10px}
+.sec-hd-center p{color:var(--abu);font-size:14px;line-height:1.7}
+.values-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.value-card{text-align:center;padding:28px 18px}
+.value-icon{width:60px;height:60px;background:rgba(30,77,43,.08);border-radius:16px;display:flex;align-items:center;justify-content:center;color:var(--hijau);font-size:24px;margin:0 auto 16px}
+.value-title{font-size:15px;font-weight:700;margin-bottom:8px}
+.value-desc{font-size:13px;color:var(--abu);line-height:1.7}
+
+.proses-section{padding-bottom:56px}
+.proses-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;position:relative}
+.proses-card{background:#fff;border-radius:16px;padding:24px 20px;border:1px solid var(--border);position:relative}
+.proses-num{position:absolute;top:-14px;left:20px;width:32px;height:32px;background:var(--hijau);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800}
+.proses-icon{font-size:30px;color:var(--emas);margin:14px 0 12px}
+.proses-title{font-size:14.5px;font-weight:700;margin-bottom:8px}
+.proses-desc{font-size:12.5px;color:var(--abu);line-height:1.65}
+
+/* FAKTA UNIK */
+.fakta-section{background:#fff;padding:56px 0;margin-bottom:56px}
+.fakta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.fakta-card{border-radius:16px;padding:28px 22px;border:1px solid var(--border);position:relative;overflow:hidden}
+.fakta-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--hijau)}
+.fakta-icon{font-size:28px;margin-bottom:14px}
+.fakta-title{font-size:15px;font-weight:800;margin-bottom:8px;color:var(--hijau)}
+.fakta-desc{font-size:13px;color:var(--abu);line-height:1.7}
+
+/* PENGHARGAAN */
+.award-box{background:linear-gradient(135deg,#fef3c7,#fde68a);border-radius:16px;padding:28px;display:flex;align-items:center;gap:20px;margin-bottom:56px;border:1px solid #f59e0b}
+.award-icon{font-size:48px;flex-shrink:0}
+.award-text h3{font-size:17px;font-weight:800;color:#92400e;margin-bottom:6px}
+.award-text p{font-size:13px;color:#78350f;line-height:1.7}
+
+.sert-section{padding-bottom:56px}
+.sert-box{background:linear-gradient(135deg,var(--hijau),var(--hijau2));border-radius:20px;padding:40px;display:flex;align-items:center;gap:32px;color:#fff;overflow:hidden;position:relative}
+.sert-icon{font-size:64px;color:var(--emas2);flex-shrink:0;opacity:.9}
+.sert-text h3{font-size:20px;font-weight:800;margin-bottom:8px}
+.sert-text p{font-size:13.5px;color:rgba(255,255,255,.82);line-height:1.75;max-width:600px}
+
+.cta-section{padding-bottom:64px;text-align:center}
+.cta-box{background:#fff;border-radius:20px;padding:48px 32px;border:1px solid var(--border)}
+.cta-box h2{font-size:24px;font-weight:800;margin-bottom:10px}
+.cta-box p{color:var(--abu);font-size:14px;margin-bottom:24px}
+.cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-hijau{background:var(--hijau);color:#fff;padding:13px 26px;border-radius:9px;font-weight:700;font-size:14px;border:none;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:8px;transition:.2s}
+.btn-hijau:hover{background:var(--hijau2)}
+.btn-outline-h{background:#fff;color:var(--hijau);padding:12px 26px;border-radius:9px;font-weight:700;font-size:14px;border:2px solid var(--hijau);cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:8px;transition:.2s}
+.btn-outline-h:hover{background:var(--krem)}
+
+footer{background:#111;color:#fff;padding:36px 0}
+.footer-inner{max-width:1280px;margin:0 auto;padding:0 32px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.footer-brand{display:flex;align-items:center;gap:10px}
+.footer-brand img{height:36px}
+.footer-brand-name{font-size:16px;font-weight:800}
+.footer-copy{font-size:12px;color:rgba(255,255,255,.4)}
+
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e5e7eb;display:flex;z-index:300;box-shadow:0 -4px 20px rgba(0,0,0,.08);height:64px}
+.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;color:#9ca3af;font-size:11px;font-weight:600;text-decoration:none;transition:.15s;position:relative;padding:8px 0;font-family:'Plus Jakarta Sans',sans-serif}
+.bn-item i{font-size:20px}
+.bn-item.active,.bn-item:hover{color:var(--hijau)}
+.bn-item.active::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:40px;height:3px;background:var(--hijau);border-radius:0 0 4px 4px}
+
+@media(max-width:1024px){.stat-strip{grid-template-columns:repeat(2,1fr)}.values-grid{grid-template-columns:repeat(2,1fr)}.proses-grid{grid-template-columns:repeat(2,1fr);gap:28px 20px}.fakta-grid{grid-template-columns:1fr}}
+@media(max-width:768px){.tt-hero h1{font-size:26px}.tt-grid{grid-template-columns:1fr}.tt-img{order:-1}.sert-box{flex-direction:column;text-align:center;padding:32px 24px}.award-box{flex-direction:column;text-align:center}}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-inner">
+    <button class="nav-back" onclick="history.back()"><i class="fas fa-arrow-left"></i></button>
+    <a href="index.html" class="logo">
+      <img src="img/logo.png" alt="Sigupai"/>
+      <div><div class="logo-name">Rumoh Sigupai</div><div class="logo-sub">Beras Khas Abdya</div></div>
+    </a>
+    <span class="page-title">Tentang Kami</span>
+  </div>
+</nav>
+
+<section class="tt-hero">
+  <img class="tt-hero-bg" src="img/beras.png" alt="Sawah Abdya"/>
+  <div class="tt-hero-overlay"></div>
+  <div class="tt-hero-inner">
+    <div class="tt-hero-label"><i class="fas fa-leaf"></i> Cerita Kami</div>
+    <h1>Dari Sawah Abdya,<br/>Untuk Meja Makan Dunia</h1>
+    <p>Beras legendaris yang sempat menghilang selama 32 tahun, kini hadir kembali dengan kualitas premium dan cita rasa yang tak tertandingi.</p>
+  </div>
+</section>
+
+<div class="main">
+
+  <div class="stat-strip">
+    <div class="stat-item">
+      <div class="stat-num">32 Thn</div>
+      <div class="stat-label">Sempat Menghilang</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">2021</div>
+      <div class="stat-label">Dikembangkan Kembali</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">Mancanegara</div>
+      <div class="stat-label">Jangkauan Pasar</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">Limited</div>
+      <div class="stat-label">Produksi Terbatas</div>
+    </div>
+  </div>
+
+  <!-- KISAH KAMI -->
+  <section class="tt-section">
+    <div class="tt-grid">
+      <div>
+        <div class="tt-label">Kisah Kami</div>
+        <h2 class="tt-title">Beras Legendaris yang Bangkit Kembali</h2>
+        <p class="tt-desc">Beras Sigupai adalah varietas padi lokal khas yang sempat menghilang selama kurang lebih <strong>32 tahun</strong>. Pada tahun 2021, usaha pengembangan kembali dimulai dengan penuh dedikasi, meski prosesnya tidak mudah — banyak petani yang mengundurkan diri karena tingginya kesulitan dalam budidaya dan terbatasnya ketersediaan benih.</p>
+        <p class="tt-desc">Proses budidayanya memang sangat menuntut: tanaman sangat rentan terhadap hama, kualitas beras sangat bergantung pada ketepatan waktu panen, dan penggilingan masih dilakukan secara <strong>tradisional</strong> untuk menjaga mutu serta aroma khasnya yang tidak bisa digantikan oleh mesin modern.</p>
+        <p class="tt-desc">Yang membuat Sigupai benar-benar istimewa: ada <strong>ritual dan tradisi khusus</strong> yang dipercaya turun-temurun dapat menjaga aroma khas beras ini tetap harum. Sebuah warisan budaya yang menjadi bagian tak terpisahkan dari identitas Sigupai.</p>
+
+        <div class="legalitas-grid">
+          <div class="legal-item"><i class="fas fa-check-circle"></i> Nomor Induk Berusaha (NIB)</div>
+          <div class="legal-item"><i class="fas fa-check-circle"></i> Izin Usaha Resmi</div>
+          <div class="legal-item"><i class="fas fa-check-circle"></i> Izin Edar Produk</div>
+          <div class="legal-item"><i class="fas fa-check-circle"></i> Sertifikat Halal</div>
+          <div class="legal-item"><i class="fas fa-spinner"></i> Proses Hak Paten</div>
+          <div class="legal-item"><i class="fas fa-globe"></i> Pemasaran hingga Mancanegara</div>
+        </div>
+      </div>
+      <div class="tt-img">
+        <img src="img/petani.png" alt="Petani Sigupai"/>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- PENGHARGAAN -->
+<div class="main">
+  <div class="award-box">
+    <div class="award-icon">🏆</div>
+    <div class="award-text">
+      <h3>Penghargaan dari Bank Indonesia</h3>
+      <p>Usaha Beras Sigupai telah mendapatkan pengakuan dan penghargaan resmi dari Bank Indonesia atas kontribusinya dalam pengembangan produk unggulan lokal dan pemberdayaan ekonomi daerah Aceh Barat Daya.</p>
+    </div>
+  </div>
+</div>
+
+<!-- FAKTA UNIK -->
+<section class="fakta-section">
+  <div class="main">
+    <div class="sec-hd-center">
+      <div class="tt-label">Yang Membuat Sigupai Istimewa</div>
+      <h2>Fakta di Balik Setiap Butir Beras</h2>
+      <p>Bukan sekadar beras biasa — ini adalah warisan budaya dan alam Aceh Barat Daya.</p>
+    </div>
+    <div class="fakta-grid">
+      <div class="fakta-card">
+        <div class="fakta-icon">🌾</div>
+        <div class="fakta-title">Cita Rasa Legendaris</div>
+        <div class="fakta-desc">Diakui sebagai salah satu beras dengan cita rasa terenak dan paling harum, menjadikannya beras premium yang dicari oleh pecinta kuliner. Aroma khasnya tidak ditemukan pada varietas lain.</div>
+      </div>
+      <div class="fakta-card">
+        <div class="fakta-icon">💎</div>
+        <div class="fakta-title">Limited Edition — Produksi Terbatas</div>
+        <div class="fakta-desc">Permintaan pasar terus meningkat, namun produksi masih sangat terbatas karena sulitnya proses budidaya dan terbatasnya benih. Ini menjadikan Sigupai beras yang langka dan bernilai tinggi.</div>
+      </div>
+      <div class="fakta-card">
+        <div class="fakta-icon">🌏</div>
+        <div class="fakta-title">Sudah Dikenal Mancanegara</div>
+        <div class="fakta-desc">Sejak 2021, Beras Sigupai telah dipasarkan hingga ke luar negeri. Keistimewaan cita rasanya melampaui batas negara dan mulai dikenal oleh konsumen internasional.</div>
+      </div>
+      <div class="fakta-card">
+        <div class="fakta-icon">🎋</div>
+        <div class="fakta-title">Ritual Tradisional Penjaga Aroma</div>
+        <div class="fakta-desc">Ada tradisi dan ritual khusus yang dipercaya turun-temurun untuk menjaga aroma khas Sigupai tetap harum. Warisan budaya ini menjadi bagian penting dari proses produksi yang tidak bisa dilewatkan.</div>
+      </div>
+      <div class="fakta-card">
+        <div class="fakta-icon">⚙️</div>
+        <div class="fakta-title">Penggilingan Tradisional</div>
+        <div class="fakta-desc">Untuk menjaga mutu dan kualitas beras, proses penggilingan masih dilakukan secara tradisional. Mesin modern tidak mampu mempertahankan keistimewaan tekstur dan aroma khas Sigupai.</div>
+      </div>
+      <div class="fakta-card">
+        <div class="fakta-icon">🌿</div>
+        <div class="fakta-title">Budidaya yang Menantang</div>
+        <div class="fakta-desc">Tidak semua petani berhasil membudidayakan Sigupai. Tanaman ini sangat rentan dan butuh perhatian ekstra. Inilah mengapa diperlukan pendampingan intensif untuk setiap petani mitra kami.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="main">
+
+  <!-- PROSES PRODUKSI -->
+  <section class="proses-section">
+    <div class="sec-hd-center">
+      <div class="tt-label">Dari Sawah ke Rumah Anda</div>
+      <h2 style="font-size:26px;font-weight:800;margin-bottom:10px">Proses yang Kami Jalani</h2>
+      <p style="color:var(--abu);font-size:14px;line-height:1.7">Setiap tahap dijalankan dengan teliti untuk memastikan beras sampai ke tangan Anda dalam kondisi terbaik.</p>
+    </div>
+    <div class="proses-grid">
+      <div class="proses-card">
+        <div class="proses-num">1</div>
+        <div class="proses-icon"><i class="fas fa-seedling"></i></div>
+        <div class="proses-title">Pendampingan Petani</div>
+        <div class="proses-desc">Petani mitra mendapat edukasi dan pendampingan langsung karena budidaya Sigupai membutuhkan keahlian khusus yang tidak semua orang bisa.</div>
+      </div>
+      <div class="proses-card">
+        <div class="proses-num">2</div>
+        <div class="proses-icon"><i class="fas fa-clock"></i></div>
+        <div class="proses-title">Panen di Waktu Tepat</div>
+        <div class="proses-desc">Ketepatan waktu panen sangat krusial. Panen yang terlalu cepat akan menurunkan kualitas rasa dan warna beras secara signifikan.</div>
+      </div>
+      <div class="proses-card">
+        <div class="proses-num">3</div>
+        <div class="proses-icon"><i class="fas fa-cogs"></i></div>
+        <div class="proses-title">Penggilingan Tradisional</div>
+        <div class="proses-desc">Proses penggilingan dilakukan secara tradisional untuk menjaga mutu, aroma, dan tekstur khas yang menjadi keunggulan Sigupai.</div>
+      </div>
+      <div class="proses-card">
+        <div class="proses-num">4</div>
+        <div class="proses-icon"><i class="fas fa-truck"></i></div>
+        <div class="proses-title">Pengiriman ke Seluruh Dunia</div>
+        <div class="proses-desc">Beras dikemas dan dikirim ke pelanggan di seluruh Indonesia bahkan mancanegara, dengan tetap menjaga kualitas selama perjalanan.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERTIFIKASI -->
+  <section class="sert-section">
+    <div class="sert-box">
+      <div class="sert-icon"><i class="fas fa-certificate"></i></div>
+      <div class="sert-text">
+        <h3>Dalam Proses Sertifikasi Indikasi Geografis & Hak Paten</h3>
+        <p>Beras Sigupai sedang dalam proses pengurusan hak paten dan sertifikasi Indikasi Geografis resmi. Usaha ini juga telah dilengkapi dengan NIB, izin usaha, izin edar, dan sertifikat halal — serta pernah meraih penghargaan dari Bank Indonesia sebagai produk unggulan lokal.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="cta-box">
+      <h2>Rasakan Sendiri Keistimewaan Beras Legendaris Ini</h2>
+      <p>Stok terbatas — dapatkan Breuh Sigupai sebelum kehabisan.</p>
+      <div class="cta-btns">
+        <a href="katalog.html" class="btn-hijau"><i class="fas fa-shopping-bag"></i> Pesan Sekarang</a>
+        <a href="edukasi.html" class="btn-outline-h"><i class="fas fa-book-open"></i> Pelajari Lebih Lanjut</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <img src="img/logo.png" alt="Sigupai"/>
+      <span class="footer-brand-name">Sigupai</span>
+    </div>
+    <span class="footer-copy">© 2026 Sigupai. Dari Sawah Abdya untuk Meja Makan Dunia.</span>
+  </div>
+</footer>
+
+<nav class="bottom-nav">
+  <a href="index.html" class="bn-item"><i class="fas fa-home"></i><span>Beranda</span></a>
+  <a href="katalog.html" class="bn-item"><i class="fas fa-store"></i><span>Katalog</span></a>
+  <a href="edukasi.html" class="bn-item"><i class="fas fa-book-open"></i><span>Edukasi</span></a>
+  <a href="pesanan.html" class="bn-item"><i class="fas fa-box"></i><span>Pesanan</span></a>
+  <a href="akun.html" class="bn-item"><i class="fas fa-user"></i><span>Akun</span></a>
+</nav>
+
+</body>
+</html>

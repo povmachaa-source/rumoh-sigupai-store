@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Pesanan Saya — Sigupai Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--hijau:#1e4d2b;--hijau2:#2d6a4f;--emas:#c8963e;--krem:#f5f0e8;--teks:#1c1c1c;--abu:#6b7280;--border:#e5e7eb;--wa:#25D366;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--krem);color:var(--teks);font-size:15px;padding-bottom:80px}
+a{text-decoration:none;color:inherit}
+
+.navbar{background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.navbar-inner{max-width:1280px;margin:0 auto;padding:0 32px;height:68px;display:flex;align-items:center;gap:20px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo img{height:48px}
+.logo-name{font-size:20px;font-weight:800;color:var(--hijau);line-height:1}
+.logo-sub{font-size:10px;font-weight:600;color:var(--emas);letter-spacing:.1em;text-transform:uppercase}
+.nav-right{margin-left:auto}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 14px;border-radius:10px;cursor:pointer;transition:.15s;color:var(--teks);border:none;background:none;font-family:inherit}
+.nav-item:hover{background:var(--krem)}
+.nav-item .ni-icon{font-size:24px;color:var(--hijau)}
+.nav-item-text strong{font-size:13px;font-weight:700;display:block}
+.nav-item-text span{font-size:12px;color:var(--abu)}
+.cart-wrap{position:relative}
+.cart-badge{position:absolute;top:-2px;right:-2px;background:var(--emas);color:#fff;font-size:10px;font-weight:700;min-width:17px;height:17px;border-radius:20px;display:none;align-items:center;justify-content:center;padding:0 3px}
+
+.breadcrumb{background:#fff;border-bottom:1px solid var(--border);padding:10px 0}
+.bc-inner{max-width:900px;margin:0 auto;padding:0 16px;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--abu)}
+.bc-inner a{color:var(--hijau);font-weight:600}
+
+.wrap{max-width:900px;margin:0 auto;padding:24px 16px}
+
+/* STATUS TABS */
+.status-tabs{display:flex;background:#fff;border-radius:12px;border:1px solid var(--border);overflow:hidden;margin-bottom:20px}
+.stab{flex:1;padding:12px 8px;text-align:center;font-size:13px;font-weight:600;color:var(--abu);cursor:pointer;border:none;background:none;font-family:inherit;transition:.15s;white-space:nowrap}
+.stab.active{background:var(--hijau);color:#fff}
+.stab:hover:not(.active){background:var(--krem)}
+
+/* PESANAN CARD */
+.pesanan-card{background:#fff;border-radius:16px;border:1px solid var(--border);margin-bottom:16px;overflow:hidden;transition:.2s}
+.pesanan-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.07)}
+
+.pc-header{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.pc-id{font-size:13px;font-weight:700;color:var(--hijau);display:flex;align-items:center;gap:6px}
+.pc-tgl{font-size:12px;color:var(--abu);margin-top:2px}
+.pc-status{font-size:12px;font-weight:700;padding:5px 14px;border-radius:20px}
+.s-menunggu{background:#fef3c7;color:#d97706}
+.s-diproses{background:#dbeafe;color:#2563eb}
+.s-dikirim{background:#ede9fe;color:#7c3aed}
+.s-selesai{background:#dcfce7;color:#16a34a}
+.s-dibatalkan{background:#fee2e2;color:#dc2626}
+
+.pc-body{padding:16px 20px}
+.pc-produk{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.pc-produk-img{width:56px;height:56px;border-radius:10px;overflow:hidden;background:linear-gradient(135deg,#e8f5e9,#f1f8e9);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;border:1px solid var(--border)}
+.pc-produk-img img{width:100%;height:100%;object-fit:cover}
+.pc-produk-nama{font-size:14px;font-weight:700;margin-bottom:3px}
+.pc-produk-qty{font-size:12px;color:var(--abu)}
+
+.pc-footer{display:flex;justify-content:space-between;align-items:center;padding-top:12px;border-top:1px solid var(--border);flex-wrap:wrap;gap:10px}
+.pc-total-label{font-size:12px;color:var(--abu);margin-bottom:2px}
+.pc-total{font-size:17px;font-weight:800;color:var(--hijau)}
+.pc-actions{display:flex;gap:8px}
+.btn-detail{background:none;border:1.5px solid var(--border);color:var(--teks);padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;transition:.2s}
+.btn-detail:hover{border-color:var(--hijau);color:var(--hijau)}
+.btn-chat-owner{background:var(--wa);color:#fff;border:none;padding:8px 14px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;transition:.2s}
+.btn-chat-owner:hover{background:#22c55e}
+
+/* DETAIL EXPAND */
+.pc-detail{display:none;border-top:1px solid var(--border);padding:18px 20px;background:#fafafa}
+.pc-detail.show{display:block}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.detail-item{background:#fff;border-radius:10px;padding:12px 14px;border:1px solid var(--border)}
+.detail-label{font-size:11px;color:var(--abu);font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
+.detail-val{font-size:13px;font-weight:700}
+.detail-produk-list{margin-bottom:0}
+.detail-produk-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
+.detail-produk-row:last-child{border-bottom:none}
+
+/* EMPTY */
+.empty-state{text-align:center;padding:56px 20px;background:#fff;border-radius:16px;border:1px solid var(--border)}
+.empty-state i{font-size:48px;color:var(--border);margin-bottom:14px}
+.empty-state h3{font-size:17px;font-weight:700;margin-bottom:8px}
+.empty-state p{font-size:14px;color:var(--abu);margin-bottom:20px}
+.btn-belanja{background:var(--hijau);color:#fff;padding:12px 24px;border-radius:9px;font-size:14px;font-weight:700;border:none;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:8px}
+
+/* BOTTOM NAV */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);display:flex;z-index:300;box-shadow:0 -4px 16px rgba(0,0,0,.08)}
+.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 4px 8px;font-size:11px;font-weight:600;color:var(--abu);text-decoration:none;transition:.15s;border:none;background:none;font-family:inherit;gap:4px}
+.bn-item i{font-size:20px}
+.bn-item:hover,.bn-item.active{color:var(--hijau)}
+.bn-dot{width:6px;height:6px;border-radius:50%;background:var(--hijau);display:none}
+.bn-item.active .bn-dot{display:block}
+
+/* TOAST */
+.toast{position:fixed;bottom:80px;right:20px;background:var(--hijau);color:#fff;padding:12px 18px;border-radius:12px;font-size:14px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.2);transform:translateY(80px);opacity:0;transition:.3s;z-index:9999;display:flex;align-items:center;gap:8px}
+.toast.show{transform:translateY(0);opacity:1}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="logo">
+      <img src="img/logo.png" alt="Sigupai"/>
+      <div><div class="logo-name">Rumoh Sigupai</div><div class="logo-sub">Beras Khas Abdya</div></div>
+    </a>
+    <div class="nav-right">
+      <a href="keranjang.html" class="nav-item cart-wrap">
+        <i class="fas fa-shopping-cart ni-icon"></i>
+        <div class="nav-item-text"><strong>Keranjang</strong><span>Belanjaan Anda</span></div>
+        <span class="cart-badge" id="cartBadge">0</span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<div class="breadcrumb">
+  <div class="bc-inner">
+    <a href="index.html"><i class="fas fa-home"></i> Beranda</a>
+    <i class="fas fa-chevron-right" style="font-size:10px"></i>
+    <span>Pesanan Saya</span>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="status-tabs">
+    <button class="stab active" onclick="filterStatus(this,'semua')">Semua</button>
+    <button class="stab" onclick="filterStatus(this,'Menunggu Pembayaran')">Menunggu</button>
+    <button class="stab" onclick="filterStatus(this,'Diproses')">Diproses</button>
+    <button class="stab" onclick="filterStatus(this,'Dikirim')">Dikirim</button>
+    <button class="stab" onclick="filterStatus(this,'Selesai')">Selesai</button>
+  </div>
+  <div id="listPesanan"></div>
+</div>
+
+<nav class="bottom-nav">
+  <a href="index.html" class="bn-item"><i class="fas fa-home"></i><span>Beranda</span><div class="bn-dot"></div></a>
+  <a href="katalog.html" class="bn-item"><i class="fas fa-th-large"></i><span>Katalog</span><div class="bn-dot"></div></a>
+  <a href="edukasi.html" class="bn-item"><i class="fas fa-book-open"></i><span>Edukasi</span><div class="bn-dot"></div></a>
+  <a href="pesanan.html" class="bn-item active"><i class="fas fa-box"></i><span>Pesanan</span><div class="bn-dot"></div></a>
+  <a href="akun.html" class="bn-item"><i class="fas fa-user"></i><span>Akun</span><div class="bn-dot"></div></a>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SUPA_URL='https://vpyvmqovjgyfcawixpbi.supabase.co';
+const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZweXZtcW92amd5ZmNhd2l4cGJpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI2NTg5MjYsImV4cCI6MjA5ODIzNDkyNn0.TpjR5sG072VgdGiiu9RNjwAAwhy37cjFqXalGjwxoBw';
+const OWNER_WA='6281265315531';
+
+const PROD_IMGS={
+  'Beras Putih':'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=200&q=80',
+  'Beras Merah':'https://images.unsplash.com/photo-1536304929831-ee1ca9d44906?w=200&q=80',
+  'Bibit':'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=200&q=80',
+};
+
+let semuaPesanan=[];
+
+function formatRp(n){return 'Rp '+Number(n).toLocaleString('id-ID')}
+function formatTgl(str){
+  if(!str)return '-';
+  return new Date(str).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
+}
+
+function updateBadge(){
+  const k=JSON.parse(localStorage.getItem('keranjang_sigupai')||'[]');
+  const total=k.reduce((a,b)=>a+b.jumlah,0);
+  const el=document.getElementById('cartBadge');
+  if(total>0){el.style.display='flex';el.textContent=total;}else el.style.display='none';
+}
+
+function getStatusClass(s){
+  if(s==='Selesai')return 's-selesai';
+  if(s==='Dikirim')return 's-dikirim';
+  if(s==='Diproses')return 's-diproses';
+  if(s==='Dibatalkan')return 's-dibatalkan';
+  return 's-menunggu';
+}
+
+function getImg(nama){
+  if(!nama)return PROD_IMGS['Beras Putih'];
+  if(nama.toLowerCase().includes('merah'))return PROD_IMGS['Beras Merah'];
+  if(nama.toLowerCase().includes('bibit')||nama.toLowerCase().includes('benih'))return PROD_IMGS['Bibit'];
+  return PROD_IMGS['Beras Putih'];
+}
+
+function toggleDetail(id){
+  const el=document.getElementById('detail-'+id);
+  el.classList.toggle('show');
+}
+
+function chatOwner(orderId,total){
+  const pesan=`Halo, saya ingin menanyakan status pesanan saya:\n\n*ID Pesanan: #${orderId}*\nTotal: ${formatRp(total)}\n\nMohon infonya. Terima kasih 🙏`;
+  window.open('https://wa.me/'+OWNER_WA+'?text='+encodeURIComponent(pesan),'_blank');
+}
+
+function renderPesanan(list){
+  const el=document.getElementById('listPesanan');
+  if(!list.length){
+    el.innerHTML=`<div class="empty-state">
+      <i class="fas fa-box-open"></i>
+      <h3>Belum ada pesanan</h3>
+      <p>Yuk mulai belanja beras premium Sigupai!</p>
+      <a href="katalog.html"><button class="btn-belanja"><i class="fas fa-shopping-bag"></i> Mulai Belanja</button></a>
+    </div>`;
+    return;
+  }
+
+  el.innerHTML=list.map(p=>{
+    const items=typeof p.items==='string'?JSON.parse(p.items||'[]'):p.items||[];
+    const firstItem=items[0]||{};
+    const extraItems=items.length>1?`+${items.length-1} produk lainnya`:'';
+    const id=p.order_id||p.id||'-';
+
+    // Detail produk
+    const detailProduk=items.map(it=>`
+      <div class="detail-produk-row">
+        <span>${it.nama||'-'} <span style="color:var(--abu)">x${it.jumlah||1}</span></span>
+        <span style="font-weight:700">${formatRp((it.harga||0)*(it.jumlah||1))}</span>
+      </div>
+    `).join('');
+
+    return `
+    <div class="pesanan-card">
+      <div class="pc-header">
+        <div>
+          <div class="pc-id"><i class="fas fa-receipt" style="font-size:11px"></i> #${id}</div>
+          <div class="pc-tgl">${formatTgl(p.created_at)}</div>
+        </div>
+        <span class="pc-status ${getStatusClass(p.status)}">${p.status||'Menunggu Pembayaran'}</span>
+      </div>
+
+      <div class="pc-body">
+        <div class="pc-produk">
+          <div class="pc-produk-img">
+            <img src="${firstItem.foto_url||getImg(firstItem.nama)}" alt="${firstItem.nama||'Produk'}"/>
+          </div>
+          <div>
+            <div class="pc-produk-nama">${firstItem.nama||'Produk Sigupai'}</div>
+            <div class="pc-produk-qty">${firstItem.jumlah||1}x ${extraItems?'· '+extraItems:''}</div>
+          </div>
+        </div>
+
+        <div class="pc-footer">
+          <div>
+            <div class="pc-total-label">Total Pembayaran</div>
+            <div class="pc-total">${formatRp(p.total)}</div>
+          </div>
+          <div class="pc-actions">
+            <button class="btn-detail" onclick="toggleDetail('${id}')">
+              <i class="fas fa-chevron-down"></i> Detail
+            </button>
+            <button class="btn-chat-owner" onclick="chatOwner('${id}',${p.total})">
+              <i class="fab fa-whatsapp"></i> Chat Owner
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="pc-detail" id="detail-${id}">
+        <div class="detail-grid">
+          <div class="detail-item">
+            <div class="detail-label">Penerima</div>
+            <div class="detail-val">${p.nama_penerima||'-'}</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">No. HP</div>
+            <div class="detail-val">${p.hp||'-'}</div>
+          </div>
+          <div class="detail-item" style="grid-column:1/-1">
+            <div class="detail-label">Alamat Pengiriman</div>
+            <div class="detail-val">${[p.alamat,p.kecamatan?'Kec. '+p.kecamatan:'',p.kota,p.provinsi].filter(Boolean).join(', ')||'-'}</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Metode Bayar</div>
+            <div class="detail-val">${p.metode_bayar||'-'}</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Catatan</div>
+            <div class="detail-val">${p.catatan||'-'}</div>
+          </div>
+        </div>
+        <div style="font-size:13px;font-weight:700;margin-bottom:10px">Rincian Produk</div>
+        <div class="detail-produk-list">${detailProduk}</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding-top:10px;margin-top:4px;font-size:14px;font-weight:800">
+          <span>Total</span>
+          <span style="color:var(--hijau)">${formatRp(p.total)}</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterStatus(el,status){
+  document.querySelectorAll('.stab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  const filtered=status==='semua'?semuaPesanan:semuaPesanan.filter(p=>(p.status||'Menunggu Pembayaran')===status);
+  renderPesanan(filtered);
+}
+
+async function init(){
+  updateBadge();
+
+  // Cek login — kalau belum login, redirect ke akun
+  const user=JSON.parse(localStorage.getItem('user_sigupai')||'null');
+  if(!user||!user.id){
+    window.location.href='akun.html';
+    return;
+  }
+
+  try{
+    // Filter by user_id — hanya ambil pesanan milik user yang login
+    const res=await fetch(
+      `${SUPA_URL}/rest/v1/pesanan?user_id=eq.${encodeURIComponent(user.id)}&select=*&order=created_at.desc`,
+      {headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}}
+    );
+    const data=await res.json();
+
+    // Gabungkan dengan pesanan lokal milik user yang sama (fallback offline)
+    const lokal=JSON.parse(localStorage.getItem('riwayat_pesanan')||'[]')
+      .filter(l=>l.user_id===user.id);
+    const supaIds=new Set(data.map(d=>d.order_id));
+    const lokalTambahan=lokal.filter(l=>!supaIds.has(l.order_id));
+    semuaPesanan=[...data,...lokalTambahan];
+  }catch{
+    // Offline fallback — hanya pesanan lokal milik user ini
+    const user=JSON.parse(localStorage.getItem('user_sigupai')||'null');
+    semuaPesanan=JSON.parse(localStorage.getItem('riwayat_pesanan')||'[]')
+      .filter(l=>l.user_id===user?.id);
+  }
+  renderPesanan(semuaPesanan);
+}
+
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Keranjang Belanja — Sigupai Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--hijau:#1e4d2b;--hijau2:#2d6a4f;--emas:#c8963e;--krem:#f5f0e8;--teks:#1c1c1c;--abu:#6b7280;--border:#e5e7eb;--wa:#25D366;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--krem);color:var(--teks);font-size:15px;padding-bottom:80px}
+a{text-decoration:none;color:inherit}
+
+.navbar{background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.navbar-inner{max-width:1280px;margin:0 auto;padding:0 32px;height:72px;display:flex;align-items:center;gap:20px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo img{height:52px}
+.logo-name{font-size:22px;font-weight:800;color:var(--hijau)}
+.logo-sub{font-size:10px;font-weight:600;color:var(--emas);letter-spacing:.1em;text-transform:uppercase}
+.nav-right{margin-left:auto}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 14px;border-radius:10px;cursor:pointer;transition:.15s;color:var(--teks);border:none;background:none;font-family:inherit}
+.nav-item:hover{background:var(--krem)}
+.nav-item .ni-icon{font-size:24px;color:var(--hijau)}
+.nav-item-text strong{font-size:13px;font-weight:700;display:block}
+.nav-item-text span{font-size:12px;color:var(--abu)}
+.cart-wrap{position:relative}
+.cart-badge{position:absolute;top:-2px;right:-2px;background:var(--emas);color:#fff;font-size:10px;font-weight:700;min-width:17px;height:17px;border-radius:20px;display:none;align-items:center;justify-content:center;padding:0 3px}
+
+.breadcrumb{background:#fff;border-bottom:1px solid var(--border);padding:12px 0}
+.bc-inner{max-width:1280px;margin:0 auto;padding:0 32px;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--abu)}
+.bc-inner a{color:var(--hijau);font-weight:600}
+
+.keranjang-wrap{max-width:1100px;margin:0 auto;padding:28px 16px}
+.keranjang-grid{display:grid;grid-template-columns:1fr 380px;gap:24px;align-items:start}
+
+/* ITEMS */
+.items-box{background:#fff;border-radius:16px;border:1px solid var(--border);overflow:hidden}
+.items-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.items-header h2{font-size:16px;font-weight:800}
+.select-all{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--abu);cursor:pointer}
+.select-all input{accent-color:var(--hijau);width:16px;height:16px}
+.item-row{padding:16px 20px;border-bottom:1px solid var(--border);display:grid;grid-template-columns:auto 72px 1fr auto auto;gap:14px;align-items:center}
+.item-row:last-child{border-bottom:none}
+.item-row:hover{background:#fafafa}
+.item-check input{accent-color:var(--hijau);width:16px;height:16px;cursor:pointer}
+.item-img{width:72px;height:72px;border-radius:10px;overflow:hidden;border:1px solid var(--border)}
+.item-img img{width:100%;height:100%;object-fit:cover}
+.item-nama{font-size:14px;font-weight:700;margin-bottom:2px}
+.item-toko{font-size:12px;color:var(--abu)}
+.item-harga{font-size:15px;font-weight:800;color:var(--hijau);text-align:right;white-space:nowrap}
+.item-sub{font-size:11px;color:var(--abu);text-align:right;margin-top:2px}
+.item-qty{display:flex;align-items:center;border:1.5px solid var(--border);border-radius:8px;overflow:hidden}
+.qty-btn{background:#fff;border:none;width:32px;height:32px;font-size:16px;cursor:pointer;color:var(--hijau);font-weight:700;font-family:inherit}
+.qty-btn:hover{background:var(--krem)}
+.qty-num{width:36px;text-align:center;font-size:14px;font-weight:700;border:none;outline:none;font-family:inherit}
+.btn-hapus{background:none;border:none;color:#dc2626;cursor:pointer;font-size:12px;font-weight:600;padding:4px 6px;border-radius:6px;font-family:inherit;display:flex;align-items:center;gap:3px;margin-top:6px}
+.btn-hapus:hover{background:#fef2f2}
+.empty-cart{padding:56px 24px;text-align:center}
+.empty-cart i{font-size:52px;color:var(--border);margin-bottom:14px}
+.empty-cart h3{font-size:18px;font-weight:700;margin-bottom:8px}
+.empty-cart p{font-size:14px;color:var(--abu);margin-bottom:20px}
+.btn-belanja{background:var(--hijau);color:#fff;padding:12px 24px;border-radius:9px;font-size:14px;font-weight:700;border:none;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:8px}
+
+/* RINGKASAN */
+.ringkasan-box{background:#fff;border-radius:16px;border:1px solid var(--border);padding:22px;position:sticky;top:90px}
+.ringkasan-title{font-size:16px;font-weight:800;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.kupon-wrap{display:flex;gap:8px;margin-bottom:18px}
+.kupon-wrap input{flex:1;border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;font-family:inherit;outline:none}
+.kupon-wrap input:focus{border-color:var(--hijau)}
+.btn-kupon{background:var(--hijau);color:#fff;border:none;padding:9px 14px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+.baris{display:flex;justify-content:space-between;font-size:14px;margin-bottom:9px}
+.baris span:first-child{color:var(--abu)}
+.baris span:last-child{font-weight:600}
+.baris.diskon span:last-child{color:#16a34a}
+.baris.total{font-size:16px;font-weight:800;padding-top:12px;border-top:2px solid var(--border);margin-top:6px}
+.baris.total span:last-child{color:var(--hijau);font-size:20px}
+
+/* METODE */
+.metode-label{font-size:13px;font-weight:700;margin:16px 0 10px}
+.metode-opts{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.metode-opt{display:flex;align-items:center;gap:10px;padding:12px 14px;border:1.5px solid var(--border);border-radius:10px;cursor:pointer;transition:.2s;font-size:13px;font-weight:600}
+.metode-opt:hover{border-color:var(--hijau)}
+.metode-opt.active{border-color:var(--hijau);background:rgba(30,77,43,.06)}
+.metode-opt input{accent-color:var(--hijau);width:15px;height:15px;flex-shrink:0}
+.metode-icon{font-size:20px}
+
+/* INFO REKENING */
+.info-rek{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1.5px solid #86efac;border-radius:12px;padding:16px;margin-bottom:14px}
+.info-rek-bank{font-size:12px;font-weight:700;color:var(--hijau);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.info-rek-norek{font-size:22px;font-weight:800;color:var(--teks);letter-spacing:.05em;margin-bottom:2px}
+.info-rek-nama{font-size:13px;color:var(--abu);font-weight:600;margin-bottom:8px}
+.btn-copy{background:var(--hijau);color:#fff;border:none;padding:6px 14px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:5px}
+
+/* INFO QRIS */
+.info-qris{background:#f0f9ff;border:1.5px solid #7dd3fc;border-radius:12px;padding:16px;margin-bottom:14px;text-align:center;display:none}
+.info-qris-title{font-size:13px;font-weight:700;color:#0369a1;margin-bottom:10px}
+.info-qris-box{width:140px;height:140px;background:#fff;border:2px solid #e0e7ff;border-radius:10px;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:80px}
+.info-qris-sub{font-size:12px;color:#0369a1}
+
+/* TOMBOL WA */
+.btn-wa{width:100%;background:var(--wa);color:#fff;border:none;padding:15px;border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:10px;transition:.2s;box-shadow:0 4px 14px rgba(37,211,102,.35)}
+.btn-wa:hover{background:#22c55e;transform:translateY(-1px)}
+.btn-wa:disabled{background:var(--border);cursor:not-allowed;box-shadow:none;transform:none}
+.aman-info{display:flex;align-items:center;justify-content:center;gap:6px;font-size:12px;color:var(--abu);margin-top:10px}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;display:none;align-items:center;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal{background:#fff;border-radius:20px;padding:28px;max-width:480px;width:92%;max-height:90vh;overflow-y:auto}
+.modal-title{font-size:18px;font-weight:800;margin-bottom:4px}
+.modal-sub{font-size:13px;color:var(--abu);margin-bottom:20px}
+.field{margin-bottom:14px}
+.field label{font-size:13px;font-weight:700;display:block;margin-bottom:5px}
+.field input,.field select{width:100%;border:1.5px solid var(--border);border-radius:9px;padding:10px 13px;font-size:14px;font-family:inherit;outline:none;color:var(--teks)}
+.field input:focus,.field select:focus{border-color:var(--hijau)}
+.modal-total-box{background:var(--krem);border-radius:10px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;margin:16px 0;border:1px solid var(--border)}
+.modal-total-box span:last-child{font-size:20px;font-weight:800;color:var(--hijau)}
+.btn-wa-modal{width:100%;background:var(--wa);color:#fff;border:none;padding:14px;border-radius:10px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 4px 14px rgba(37,211,102,.3);transition:.2s}
+.btn-wa-modal:hover{background:#22c55e}
+.btn-batal{width:100%;background:none;border:none;font-family:inherit;font-size:13px;color:var(--abu);cursor:pointer;margin-top:10px;padding:8px}
+
+/* SUCCESS */
+.success-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:600;display:none;align-items:center;justify-content:center}
+.success-overlay.show{display:flex}
+.success-box{background:#fff;border-radius:20px;padding:36px 28px;max-width:400px;width:90%;text-align:center}
+.success-icon{width:72px;height:72px;background:#dcfce7;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:36px}
+.success-box h2{font-size:22px;font-weight:800;margin-bottom:8px}
+.success-box p{font-size:14px;color:var(--abu);line-height:1.6;margin-bottom:20px}
+.order-id-box{background:var(--krem);border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:13px}
+.order-id-box strong{display:block;font-size:18px;color:var(--hijau);margin-top:4px}
+.btn-wa-sukses{width:100%;background:var(--wa);color:#fff;border:none;padding:13px;border-radius:10px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px;box-shadow:0 4px 14px rgba(37,211,102,.3)}
+.btn-lihat-pesanan{width:100%;background:none;border:1.5px solid var(--hijau);color:var(--hijau);padding:11px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
+
+/* TOAST */
+.toast{position:fixed;bottom:80px;right:20px;background:var(--hijau);color:#fff;padding:12px 18px;border-radius:12px;font-size:14px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.2);transform:translateY(80px);opacity:0;transition:.3s;z-index:9999;display:flex;align-items:center;gap:8px}
+.toast.show{transform:translateY(0);opacity:1}
+
+/* BOTTOM NAV */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);display:flex;z-index:300;box-shadow:0 -4px 16px rgba(0,0,0,.08)}
+.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 4px 8px;font-size:11px;font-weight:600;color:var(--abu);text-decoration:none;transition:.15s;border:none;background:none;font-family:inherit;gap:4px}
+.bn-item i{font-size:20px}
+.bn-item:hover,.bn-item.active{color:var(--hijau)}
+.bn-dot{width:6px;height:6px;border-radius:50%;background:var(--hijau);display:none}
+.bn-item.active .bn-dot{display:block}
+
+@media(max-width:900px){.keranjang-grid{grid-template-columns:1fr}.ringkasan-box{position:static}.item-row{grid-template-columns:auto 60px 1fr}}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="logo">
+      <img src="img/logo.png" alt="Sigupai"/>
+      <div><div class="logo-name">Rumoh Sigupai</div><div class="logo-sub">Beras Khas Abdya</div></div>
+    </a>
+    <div class="nav-right">
+      <a href="keranjang.html" class="nav-item cart-wrap">
+        <i class="fas fa-shopping-cart ni-icon"></i>
+        <div class="nav-item-text"><strong>Keranjang</strong><span>Belanjaan Anda</span></div>
+        <span class="cart-badge" id="cartBadge">0</span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<div class="breadcrumb">
+  <div class="bc-inner">
+    <a href="index.html"><i class="fas fa-home"></i> Beranda</a>
+    <i class="fas fa-chevron-right" style="font-size:10px"></i>
+    <span>Keranjang Belanja</span>
+  </div>
+</div>
+
+<div class="keranjang-wrap">
+  <div class="keranjang-grid">
+
+    <div>
+      <div class="items-box">
+        <div class="items-header">
+          <h2 id="judulKeranjang">Keranjang Belanja</h2>
+          <label class="select-all"><input type="checkbox" id="checkAll" onchange="toggleAll(this)"/> Pilih semua</label>
+        </div>
+        <div id="itemList"></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="ringkasan-box">
+        <div class="ringkasan-title">Ringkasan Pesanan</div>
+
+        <div class="kupon-wrap">
+          <input type="text" id="kuponInput" placeholder="Kode kupon / promo"/>
+          <button class="btn-kupon" onclick="pakaiKupon()">Pakai</button>
+        </div>
+
+        <div class="baris"><span>Subtotal</span><span id="rSubtotal">Rp 0</span></div>
+        <div class="baris diskon" id="rowDiskon" style="display:none"><span>Diskon kupon</span><span id="rDiskon">-Rp 0</span></div>
+        <div class="baris total"><span>Total</span><span id="rTotal">Rp 0</span></div>
+
+        <div class="metode-label">Metode Pembayaran</div>
+        <div class="metode-opts">
+          <label class="metode-opt active" onclick="pilihMetode(this,'transfer')">
+            <input type="radio" name="metode" value="transfer" checked/>
+            <span class="metode-icon">🏦</span>
+            <div><div>Transfer Bank BSI</div><div style="font-size:11px;color:var(--abu);font-weight:400">Transfer ke rekening pemilik toko</div></div>
+          </label>
+          <label class="metode-opt" onclick="pilihMetode(this,'qris')">
+            <input type="radio" name="metode" value="qris"/>
+            <span class="metode-icon">📱</span>
+            <div><div>QRIS</div><div style="font-size:11px;color:var(--abu);font-weight:400">Scan QR dari semua e-wallet & m-banking</div></div>
+          </label>
+        </div>
+
+        <!-- INFO TRANSFER -->
+        <div class="info-rek" id="infoTransfer">
+          <div class="info-rek-bank"><i class="fas fa-university"></i> Bank BSI</div>
+          <div class="info-rek-norek" id="norekDisplay">7265759259</div>
+          <div class="info-rek-nama">a.n Fitri Marsya</div>
+          <button class="btn-copy" onclick="copyNorek()"><i class="fas fa-copy"></i> Salin Nomor</button>
+        </div>
+
+        <!-- INFO QRIS -->
+        <div class="info-qris" id="infoQris">
+          <div class="info-qris-title"><i class="fas fa-qrcode"></i> QRIS Sigupai Store</div>
+          <div class="info-qris-box">📲</div>
+          <div class="info-qris-sub">Owner akan kirim kode QRIS via WhatsApp setelah pesanan masuk</div>
+        </div>
+
+        <button class="btn-wa" id="btnWa" onclick="bukaForm()">
+          <i class="fab fa-whatsapp"></i> Lanjut Pesan
+        </button>
+        <div class="aman-info"><i class="fas fa-shield-alt"></i> Pesanan langsung ke pemilik toko</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL FORM -->
+<div class="modal-overlay" id="modalForm">
+  <div class="modal">
+    <div class="modal-title">📦 Data Pengiriman</div>
+    <div class="modal-sub">Lengkapi data di bawah untuk melanjutkan pesanan</div>
+    <div class="field"><label>Nama Lengkap Penerima *</label><input type="text" id="fNama" placeholder="Nama lengkap"/></div>
+    <div class="field"><label>Nomor HP / WhatsApp *</label><input type="text" id="fHp" placeholder="08xx-xxxx-xxxx"/></div>
+    <div class="field"><label>Alamat Lengkap *</label><input type="text" id="fAlamat" placeholder="Jl. Nama, No. Rumah"/></div>
+    <div class="field"><label>Kecamatan *</label><input type="text" id="fKecamatan" placeholder="Nama kecamatan"/></div>
+    <div class="field"><label>Kota / Kabupaten *</label><input type="text" id="fKota" placeholder="Banda Aceh"/></div>
+    <div class="field"><label>Provinsi *</label><input type="text" id="fProvinsi" placeholder="Aceh"/></div>
+    <div class="field"><label>Catatan (opsional)</label><input type="text" id="fCatatan" placeholder="Misal: tolong dikemas rapi"/></div>
+    <div class="modal-total-box">
+      <span>Total Pembayaran</span>
+      <span id="modalTotal">Rp 0</span>
+    </div>
+    <button class="btn-wa-modal" onclick="prosesCheckout()">
+      <i class="fab fa-whatsapp"></i> Konfirmasi & Kirim Pesanan
+    </button>
+    <button class="btn-batal" onclick="tutupForm()">Batal</button>
+  </div>
+</div>
+
+<!-- SUCCESS -->
+<div class="success-overlay" id="successOverlay">
+  <div class="success-box">
+    <div class="success-icon">✅</div>
+    <h2>Pesanan Berhasil Dibuat!</h2>
+    <p>Pesanan kamu sudah masuk. Sekarang konfirmasi ke pemilik toko via WhatsApp untuk info pembayaran.</p>
+    <div class="order-id-box">
+      ID Pesanan
+      <strong id="orderId">#SGP-000000</strong>
+    </div>
+    <button class="btn-wa-sukses" id="btnWaSukses">
+      <i class="fab fa-whatsapp"></i> Konfirmasi ke Pemilik Toko
+    </button>
+    <button class="btn-lihat-pesanan" onclick="window.location.href='pesanan.html'">
+      <i class="fas fa-box"></i> Lihat Pesanan Saya
+    </button>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <a href="index.html" class="bn-item"><i class="fas fa-home"></i><span>Beranda</span><div class="bn-dot"></div></a>
+  <a href="katalog.html" class="bn-item"><i class="fas fa-th-large"></i><span>Katalog</span><div class="bn-dot"></div></a>
+  <a href="edukasi.html" class="bn-item"><i class="fas fa-book-open"></i><span>Edukasi</span><div class="bn-dot"></div></a>
+  <a href="pesanan.html" class="bn-item"><i class="fas fa-box"></i><span>Pesanan</span><div class="bn-dot"></div></a>
+  <a href="akun.html" class="bn-item"><i class="fas fa-user"></i><span>Akun</span><div class="bn-dot"></div></a>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SUPA_URL='https://vpyvmqovjgyfcawixpbi.supabase.co';
+const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZweXZtcW92amd5ZmNhd2l4cGJpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI2NTg5MjYsImV4cCI6MjA5ODIzNDkyNn0.TpjR5sG072VgdGiiu9RNjwAAwhy37cjFqXalGjwxoBw';
+const OWNER_WA='6281265315531';
+const BSI_NOREK='7265759259';
+const BSI_NAMA='Fitri Marsya';
+
+const PROD_IMGS={
+  'Beras Putih':'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=200&q=80',
+  'Beras Merah':'https://images.unsplash.com/photo-1536304929831-ee1ca9d44906?w=200&q=80',
+  'Bibit':'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=200&q=80',
+};
+
+let keranjang=JSON.parse(localStorage.getItem('keranjang_sigupai')||'[]');
+let diskon=0;
+let metodeBayar='transfer';
+let pesanWaUrl='';
+
+function formatRp(n){return 'Rp '+Number(n).toLocaleString('id-ID')}
+
+function toast(msg,err=false){
+  const t=document.getElementById('toast');
+  t.style.background=err?'#dc2626':'var(--hijau)';
+  t.innerHTML=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+function simpan(){localStorage.setItem('keranjang_sigupai',JSON.stringify(keranjang));}
+
+function updateBadge(){
+  const total=keranjang.reduce((a,b)=>a+b.jumlah,0);
+  const el=document.getElementById('cartBadge');
+  if(total>0){el.style.display='flex';el.textContent=total;}else el.style.display='none';
+}
+
+function getDipilih(){
+  return keranjang.filter((_,i)=>{
+    const cb=document.getElementById('cb-'+i);
+    return cb?cb.checked:true;
+  });
+}
+
+function hitungTotal(){
+  const dipilih=getDipilih();
+  const subtotal=dipilih.reduce((a,b)=>a+(b.harga*b.jumlah),0);
+  const total=Math.max(0,subtotal-diskon);
+  document.getElementById('rSubtotal').textContent=formatRp(subtotal);
+  document.getElementById('rTotal').textContent=formatRp(total);
+  document.getElementById('modalTotal').textContent=formatRp(total);
+  document.getElementById('btnWa').disabled=dipilih.length===0;
+  return {subtotal,total,dipilih};
+}
+
+function pakaiKupon(){
+  const kode=document.getElementById('kuponInput').value.trim().toUpperCase();
+  if(kode==='SIGUPAI20'){diskon=20000;}
+  else if(kode==='ABDYA10'){diskon=10000;}
+  else{toast('<i class="fas fa-times-circle"></i> Kode kupon tidak valid',true);return;}
+  document.getElementById('rowDiskon').style.display='flex';
+  document.getElementById('rDiskon').textContent='-'+formatRp(diskon);
+  hitungTotal();
+  toast('<i class="fas fa-tag"></i> Kupon berhasil! Diskon '+formatRp(diskon));
+}
+
+function toggleAll(el){
+  keranjang.forEach((_,i)=>{
+    const cb=document.getElementById('cb-'+i);
+    if(cb)cb.checked=el.checked;
+  });
+  hitungTotal();
+}
+
+function hapusItem(i){
+  const nama=keranjang[i].nama;
+  keranjang.splice(i,1);
+  simpan();updateBadge();render();hitungTotal();
+  toast('<i class="fas fa-trash"></i> '+nama+' dihapus');
+}
+
+function ubahQty(i,delta){
+  keranjang[i].jumlah=Math.max(1,keranjang[i].jumlah+delta);
+  simpan();updateBadge();render();hitungTotal();
+}
+
+function getImg(item){
+  if(item.foto_url)return item.foto_url;
+  if(item.nama?.toLowerCase().includes('merah'))return PROD_IMGS['Beras Merah'];
+  if(item.nama?.toLowerCase().includes('bibit')||item.nama?.toLowerCase().includes('benih'))return PROD_IMGS['Bibit'];
+  return PROD_IMGS['Beras Putih'];
+}
+
+function render(){
+  const list=document.getElementById('itemList');
+  document.getElementById('judulKeranjang').textContent=`Keranjang (${keranjang.length} produk)`;
+  if(!keranjang.length){
+    list.innerHTML=`<div class="empty-cart">
+      <i class="fas fa-shopping-cart"></i>
+      <h3>Keranjang masih kosong</h3>
+      <p>Yuk belanja beras premium Sigupai!</p>
+      <a href="katalog.html"><button class="btn-belanja"><i class="fas fa-shopping-bag"></i> Mulai Belanja</button></a>
+    </div>`;
+    return;
+  }
+  list.innerHTML=keranjang.map((item,i)=>`
+    <div class="item-row">
+      <div class="item-check"><input type="checkbox" id="cb-${i}" checked onchange="hitungTotal()"/></div>
+      <div class="item-img"><img src="${getImg(item)}" alt="${item.nama}"/></div>
+      <div>
+        <div class="item-nama">${item.nama}</div>
+        <div class="item-toko">Sigupai · ${item.berat||''}</div>
+      </div>
+      <div>
+        <div class="item-qty">
+          <button class="qty-btn" onclick="ubahQty(${i},-1)">−</button>
+          <span class="qty-num">${item.jumlah}</span>
+          <button class="qty-btn" onclick="ubahQty(${i},1)">+</button>
+        </div>
+      </div>
+      <div>
+        <div class="item-harga">${formatRp(item.harga)}</div>
+        <div class="item-sub">Subtotal: ${formatRp(item.harga*item.jumlah)}</div>
+        <button class="btn-hapus" onclick="hapusItem(${i})"><i class="fas fa-trash"></i> Hapus</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function pilihMetode(el,val){
+  document.querySelectorAll('.metode-opt').forEach(o=>o.classList.remove('active'));
+  el.classList.add('active');
+  metodeBayar=val;
+  document.getElementById('infoTransfer').style.display=val==='transfer'?'block':'none';
+  document.getElementById('infoQris').style.display=val==='qris'?'block':'none';
+}
+
+function copyNorek(){
+  navigator.clipboard.writeText(BSI_NOREK).then(()=>{
+    toast('<i class="fas fa-check"></i> Nomor rekening disalin!');
+  });
+}
+
+function bukaForm(){
+  const {dipilih}=hitungTotal();
+  if(!dipilih.length){toast('<i class="fas fa-exclamation-circle"></i> Pilih produk dulu!',true);return;}
+  const user=JSON.parse(localStorage.getItem('user_sigupai')||'null');
+  if(!user||!user.id){
+    toast('<i class="fas fa-lock"></i> Silakan masuk dulu sebelum memesan!',true);
+    setTimeout(()=>window.location.href='akun.html',1500);
+    return;
+  }
+  if(user.nama)document.getElementById('fNama').value=user.nama;
+  if(user.hp)document.getElementById('fHp').value=user.hp;
+  document.getElementById('modalForm').classList.add('show');
+}
+
+function tutupForm(){document.getElementById('modalForm').classList.remove('show');}
+
+async function prosesCheckout(){
+  const nama=document.getElementById('fNama').value.trim();
+  const hp=document.getElementById('fHp').value.trim();
+  const alamat=document.getElementById('fAlamat').value.trim();
+  const kecamatan=document.getElementById('fKecamatan').value.trim();
+  const kota=document.getElementById('fKota').value.trim();
+  const provinsi=document.getElementById('fProvinsi').value.trim();
+  if(!nama||!hp||!alamat||!kecamatan||!kota||!provinsi){
+    toast('<i class="fas fa-exclamation-circle"></i> Lengkapi semua data wajib!',true);return;
+  }
+
+  const {dipilih,total}=hitungTotal();
+  const catatan=document.getElementById('fCatatan').value.trim();
+  const orderId='SGP-'+Date.now().toString().slice(-6);
+  const userNow=JSON.parse(localStorage.getItem('user_sigupai')||'null');
+  const metodeTeks=metodeBayar==='transfer'?'Transfer BSI ('+BSI_NOREK+')':'QRIS';
+
+  // SIMPAN KE SUPABASE DULU
+  try{
+    await fetch(`${SUPA_URL}/rest/v1/pesanan`,{
+      method:'POST',
+      headers:{
+        'apikey':SUPA_KEY,
+        'Authorization':'Bearer '+SUPA_KEY,
+        'Content-Type':'application/json',
+        'Prefer':'return=minimal'
+      },
+      body:JSON.stringify({
+        order_id:orderId,
+        user_id:userNow?.id||null,
+        nama_penerima:nama,
+        hp,alamat,kota,
+        kecamatan,provinsi,
+        metode_bayar:metodeTeks,
+        catatan,
+        items:JSON.stringify(dipilih),
+        total,
+        status:'Menunggu Pembayaran',
+        created_at:new Date().toISOString()
+      })
+    });
+  }catch(e){console.log('DB:',e);}
+
+  // SIMPAN KE LOCALSTORAGE
+  try{
+    const riwayat=JSON.parse(localStorage.getItem('riwayat_pesanan')||'[]');
+    riwayat.unshift({
+      order_id:orderId,id:orderId,
+      user_id:userNow?.id||null,
+      status:'Menunggu Pembayaran',
+      nama_penerima:nama,hp,alamat,kecamatan,kota,provinsi,
+      metode_bayar:metodeTeks,catatan,total,
+      created_at:new Date().toISOString(),
+      items:JSON.stringify(dipilih)
+    });
+    localStorage.setItem('riwayat_pesanan',JSON.stringify(riwayat));
+  }catch(e){}
+
+  // SUSUN PESAN WA UNTUK OWNER
+  const itemsTeks=dipilih.map(p=>`  • ${p.nama} x${p.jumlah} = ${formatRp(p.harga*p.jumlah)}`).join('\n');
+  const diskonTeks=diskon>0?`\n💸 Diskon: -${formatRp(diskon)}`:'';
+  const metodePembayaranTeks=metodeBayar==='transfer'
+    ?`Transfer BSI\n   No. Rek: ${BSI_NOREK} (${BSI_NAMA})`
+    :`QRIS (mohon kirim kode QR ke pembeli)`;
+
+  const pesan=
+`🌾 *PESANAN BARU — SIGUPAI STORE*
+━━━━━━━━━━━━━━━━
+🆔 *ID Pesanan:* #${orderId}
+📅 *Waktu:* ${new Date().toLocaleString('id-ID')}
+━━━━━━━━━━━━━━━━
+📦 *PRODUK:*
+${itemsTeks}${diskonTeks}
+💰 *TOTAL: ${formatRp(total)}*
+━━━━━━━━━━━━━━━━
+👤 *DATA PEMBELI:*
+• Nama: ${nama}
+• HP/WA: ${hp}
+• Alamat: ${alamat}, Kec. ${kecamatan}, ${kota}, ${provinsi}
+• Pembayaran: ${metodePembayaranTeks}
+${catatan?`• Catatan: ${catatan}`:''}
+━━━━━━━━━━━━━━━━
+_Pesanan baru masuk. Mohon segera dikonfirmasi. Terima kasih! 🙏_`;
+
+  pesanWaUrl='https://wa.me/'+OWNER_WA+'?text='+encodeURIComponent(pesan);
+
+  // BERSIHKAN KERANJANG
+  const idsDipesan=new Set(dipilih.map(d=>d.id));
+  keranjang=keranjang.filter(k=>!idsDipesan.has(k.id));
+  simpan();updateBadge();
+
+  // TAMPILKAN SUCCESS
+  tutupForm();
+  document.getElementById('orderId').textContent='#'+orderId;
+  document.getElementById('btnWaSukses').onclick=()=>window.open(pesanWaUrl,'_blank');
+  document.getElementById('successOverlay').classList.add('show');
+  render();hitungTotal();
+}
+
+render();hitungTotal();updateBadge();
+</script>
+</body>
+</html>
