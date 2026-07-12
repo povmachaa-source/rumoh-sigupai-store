@@ -190,88 +190,126 @@ footer{background:#111;color:#fff;padding:52px 0 0}
 .skel{background:linear-gradient(90deg,#f0f0f0 25%,#e8e8e8 50%,#f0f0f0 75%);background-size:200% 100%;animation:sk 1.4s infinite;border-radius:8px}
 @keyframes sk{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
-@media(max-width:1024px){.prod-grid{grid-template-columns:repeat(3,1fr)}.footer-top{grid-template-columns:1fr 1fr 1fr}.kgl-inner{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:768px){.hero h1{font-size:32px}.tentang-inner{grid-template-columns:1fr}.tentang-img{display:none}.testi-grid,.tips-grid{grid-template-columns:1fr}.nl-inner{flex-direction:column}.footer-top{grid-template-columns:1fr 1fr}.prod-grid{grid-template-columns:repeat(2,1fr)}}
 
-/* ── RESPONSIVE HP (480px ke bawah) ── */
-@media(max-width:480px){
+
+
+
+
+
+
+
+/* ══════════════════════════════════
+   RESPONSIVE — ikut gaya edukasi.html
+   ══════════════════════════════════ */
+
+/* TABLET */
+@media(max-width:1024px){
+  .prod-grid{grid-template-columns:repeat(3,1fr) !important}
+  .footer-top{grid-template-columns:1fr 1fr 1fr}
+  .kgl-inner{grid-template-columns:repeat(2,1fr)}
+}
+
+/* MOBILE */
+@media(max-width:768px){
   /* Navbar */
-  .navbar-inner{padding:0 12px;height:58px;gap:8px}
-  .logo img{height:38px}
-  .logo-name{font-size:16px}
-  .logo-sub{font-size:9px}
-  .search-wrap{display:none}
-  .nav-right{gap:0}
-  .nav-item{padding:6px 8px}
-  .nav-item .ni-icon{font-size:22px}
+  .navbar-inner{padding:0 16px;height:60px}
   .nav-item-text{display:none}
+  .nav-chip-text{display:none}
 
   /* Menubar */
-  .menubar-inner{padding:0 8px;overflow-x:auto;gap:0}
+  .menubar-inner{overflow-x:auto;padding:0 8px}
   .menubar-inner::-webkit-scrollbar{display:none}
-  .mitem{padding:10px 10px;font-size:12px;white-space:nowrap}
+  .mitem{font-size:12px;padding:10px 10px;white-space:nowrap;flex-shrink:0}
   .menu-pill{display:none}
 
   /* Hero */
-  .hero{min-height:300px}
-  .hero-inner{padding:0 16px}
-  .hero h1{font-size:22px;line-height:1.25}
-  .hero p{font-size:13px;margin-bottom:1rem}
+  .hero{height:auto;min-height:300px}
+  .hero-inner{padding:24px 16px}
+  .hero h1{font-size:26px;line-height:1.25}
+  .hero-desc{font-size:13px;margin-bottom:18px}
   .hero-btns{flex-direction:column;gap:8px}
-  .hero-btns .btn-belanja,.hero-btns a button,.hero-btns button{width:100%;justify-content:center}
+  .hero-btns a,.hero-btns button,.btn-belanja{width:100% !important;justify-content:center}
 
-  /* Keunggulan strip */
-  .kgl-inner{grid-template-columns:1fr 1fr;padding:0 12px}
-  .kgl-item{padding:14px 10px}
+  /* Keunggulan */
+  .kgl-inner{grid-template-columns:1fr 1fr !important;padding:0}
+  .kgl-item{padding:14px 10px;border-left:none}
   .kgl-item i{font-size:20px}
   .kgl-item strong{font-size:12px}
   .kgl-item span{font-size:11px}
 
-  /* Sections */
-  .sec-inner{padding:0 12px}
-  .sec-hd{flex-direction:row;align-items:center;margin-bottom:14px}
-  .sec-hd h2{font-size:17px}
+  /* Section */
+  .sec-inner{padding:0 16px}
+  .sec-hd h2{font-size:18px}
 
-  /* Produk grid */
-  .prod-grid{grid-template-columns:1fr 1fr;gap:10px}
-  .prod-card .prod-img{height:130px}
-  .prod-card .prod-body{padding:10px}
-  .prod-card .prod-name{font-size:13px}
-  .prod-card .prod-price{font-size:14px}
+  /* Produk — 2 kolom */
+  .prod-grid{grid-template-columns:1fr 1fr !important;gap:10px}
+  .prod-body{padding:10px}
+  .prod-name{font-size:12.5px}
+  .prod-price{font-size:14px}
+  .prod-badge{font-size:9px;padding:3px 7px}
 
   /* Promo card */
-  .promo-card{padding:1.25rem}
-  .promo-card .disc{font-size:44px}
+  .promo-card{padding:1rem}
+  .promo-card .disc{font-size:40px}
 
   /* Tentang */
-  .tentang-inner{padding:32px 12px;gap:24px}
+  .tentang-inner{grid-template-columns:1fr;padding:28px 16px}
+  .tentang-img{display:none}
   .tentang-content h2{font-size:22px}
-  .tentang-stats{grid-template-columns:repeat(2,1fr);gap:10px}
+  .tentang-stats{grid-template-columns:1fr 1fr;gap:10px}
+
+  /* Tips */
+  .tips-grid{grid-template-columns:1fr !important;gap:10px}
+  .tips-card{flex-direction:row;align-items:center}
+  .tips-img{width:90px;height:90px;min-width:90px;border-radius:0}
+  .tips-body{padding:10px 12px}
+  .tips-judul{font-size:13px;line-height:1.35}
 
   /* Testimonial */
-  .testi-inner{padding:0 12px}
-  .tcard{padding:18px}
-
-  /* Tips/artikel */
-  .tips-grid{grid-template-columns:1fr;gap:12px}
+  .testi-grid{grid-template-columns:1fr !important}
+  .testi-inner{padding:0 16px}
 
   /* Newsletter */
-  .nl-inner{padding:0 12px;gap:16px;flex-direction:column}
-  .nl-left h2{font-size:18px}
-  .nl-form{flex-direction:column;border-radius:10px;overflow:visible;gap:8px}
-  .nl-form input{border-radius:8px;padding:12px 16px;font-size:14px}
-  .nl-form button{border-radius:8px;padding:12px 16px;font-size:14px;width:100%}
+  .nl-inner{flex-direction:column;gap:16px;padding:0 16px;text-align:center}
+  .nl-text h3{font-size:18px}
+  .nl-form{flex-direction:column;gap:8px}
+  .nl-form input{border-radius:8px !important;padding:12px;text-align:center}
+  .nl-form button{border-radius:8px !important;width:100%;padding:12px}
 
   /* Footer */
-  .footer-inner{padding:0 12px}
-  .footer-top{grid-template-columns:1fr;gap:24px}
-  .footer-bottom{flex-direction:column;gap:10px;text-align:center;padding:16px 0}
+  .footer-inner{padding:0 16px}
+  .footer-top{grid-template-columns:1fr 1fr !important;gap:20px}
+  .footer-bottom{flex-direction:column;gap:8px;text-align:center}
   .payment-methods{justify-content:center;flex-wrap:wrap}
-  .pay-badge{font-size:10px;padding:4px 8px}
-
-  /* Section padding */
-  .section-produk,.section-tentang,.section-testi,.section-tips,.section-nl{padding:32px 0}
 }
+
+/* HP KECIL */
+@media(max-width:480px){
+  /* Navbar */
+  .navbar-inner{padding:0 12px;height:54px}
+  .logo img{height:34px}
+  .logo-name{font-size:14px}
+  .logo-sub{font-size:9px}
+  .search-wrap{flex:1;max-width:none}
+
+  /* Hero */
+  .hero h1{font-size:22px}
+  .hero-desc{font-size:12px}
+
+  /* Produk */
+  .prod-grid{grid-template-columns:1fr 1fr !important;gap:8px}
+  .prod-img-wrap{aspect-ratio:1}
+  .prod-body{padding:8px 8px 10px}
+  .prod-name{font-size:12px}
+  .prod-store{font-size:10px}
+  .prod-rating{font-size:10px}
+  .prod-price{font-size:13px}
+  .btn-cart-sm{width:26px;height:26px}
+
+  /* Footer */
+  .footer-top{grid-template-columns:1fr !important}
+}
+
 </style>
 </head>
 <body>
@@ -426,6 +464,7 @@ footer{background:#111;color:#fff;padding:52px 0 0}
     <div class="sec-hd">
       <h2 class="sec-t">Tips &amp; Resep</h2>
       <a href="#" class="sec-a">Lihat semua &rsaquo;</a>
+      </div>
   <div class="tips-grid">
   <a href="edukasi.html" class="tips-card">
     <div class="tips-img"><img src="https://images.unsplash.com/photo-1536304929831-ee1ca9d44906?w=200&q=80" alt=""/></div>
